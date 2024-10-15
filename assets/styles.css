@@ -1,0 +1,8 @@
+.lia_header__logo {
+  display: none;
+}
+
+.lia-header__middle {
+  background: url(assets/logo.svg);
+  background-repeat: no-repeat;
+}
