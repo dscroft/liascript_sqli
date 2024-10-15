@@ -15,9 +15,16 @@ comment:  Try to write a short comment about
 link: https://dscroft.github.io/liascript_materials/assets/styles.css
 -->
 
-# Stereo Camera Calibrator activity
+# Stereo Calibrator Activity
 
 ## Matlab
+
+Depending on the provision you will either be using MATLAB installed on the provided laptops or MATLAB Online.
+
+Both tools function near identically once open but running the software is different.
+
+{{1}}
+**Select the appropriate option below.**
 
 <details>
 <summary>Installed MATLAB</summary>
@@ -28,7 +35,11 @@ link: https://dscroft.github.io/liascript_materials/assets/styles.css
 <details>
 <summary>MATLAB Online</summary>
 
-1. Open a new browser window.
+{{2}}
+> **Go to [https://matlab.mathworks.com](https://matlab.mathworks.com).**
+
+
+
 </details>
 
 ## Opening Stereo Camera Calibrator
