@@ -11,6 +11,8 @@ narrator: US English Female
 
 comment:  Try to write a short comment about
           your course, multiline is also okay.
+
+link: https://dscroft.github.io/liascript_materials/assets/styles.css
 -->
 
 # Stereo Camera Calibrator activity
