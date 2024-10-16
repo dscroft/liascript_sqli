@@ -9,27 +9,55 @@ language: en
 
 narrator: US English Female
 
-comment:  Try to write a short comment about
-          your course, multiline is also okay.
+comment:  Short activity based for identifying the extrinsic parameters of a camera pair.
+          Although we are using the stereo camera calibrator app for this activity, the 
+          principles are the same for any multi camera calibration with a shared field of view.
 
 link: https://dscroft.github.io/liascript_materials/assets/styles.css
 -->
 
 # Stereo Calibrator Activity
 
-## Matlab
+Short activity based for identifying the extrinsic parameters of a camera pair.
+
+Although we are using the stereo camera calibrator app for this activity, 
+the principles are the same for any multi camera calibration with a shared field of view.
+
+In this scenario we have a pair of cameras mounted on a vehicle in an indoor environment.
+This is a limited amount of visual and physical clutter in the scene.
+
+![Simulated garage environment with Range Rover and calibration target](images/garage.png)
+
+## Opening Matlab
 
 Depending on the provision you will either be using MATLAB installed on the provided laptops or MATLAB Online.
 
 Both tools function near identically once open but running the software is different.
 
 {{1}}
-**Select the appropriate option below.**
+> **Select the appropriate option below.**
 
 <details>
 <summary>Installed MATLAB</summary>
 
-1. Using the provided laptop.
+{{2}} 
+> **Using the provided laptop open MATLAB.**
+>
+> This activity has been tested on MATLAB R2022b through R2024a.
+>
+> ![](../assets/icons8-windows8-48.png)<!-- style="width: 24px;" --> Windows users can search for MATLAB in the start menu.
+> 
+> ![](../assets/icons8-mac-client-48.png)<!-- style="width: 24px;" --> Mac users will find it in the applications folder.
+> 
+> ![](../assets/icons8-linux-48.png)<!-- style="width: 24px;" --> Linux users, this will depend on your distro. 
+> But standard locations are `/usr/local/MATLAB/R20xxx/bin/matlab` or `/usr/local/bin/matlab`.
+
+
+{{3}}
+> When finished you should have a screen that looks like the one below.
+>
+> ![](images/matlab_loaded_local.png)
+
 </details>
 
 <details>
@@ -38,11 +66,36 @@ Both tools function near identically once open but running the software is diffe
 {{2}}
 > **Go to [https://matlab.mathworks.com](https://matlab.mathworks.com).**
 
+{{3}}
+> **Sign in with your MathWorks account.**
+>
+> - Or using the provided account details.
 
+
+{{4}}
+> **Click `Open MATLAB Online`.**
+>
+> IMAGE
+
+
+{{5}}
+> **Wait for MATLAB to load.**
+
+{{6}}
+> When finished you should have a screen that looks like the one below.
+>
+> ![](images/matlab_loaded.png)
 
 </details>
 
-## Opening Stereo Camera Calibrator
+
+
+
+## Opening calibrator app
+
+You should be looking at the default MATLAB workspace screen.
+
+![](images/matlab_loaded.png)
 
 {{1}}
 > **Select `APPS` tab at the top of the window.**
@@ -66,50 +119,70 @@ Both tools function near identically once open but running the software is diffe
 
 ## Loading the images
 
-{{1-99}}
-> **Click `New Session`.**
+You should be looking at the MATLAB Stereo Camera Calibrator screen.
 
-{{2-99}}
+![](images/calibrator_empty.png)
+
+{{1}}
+> **Click `New Session`.**
+>
+> ![](images/new_session.png)
+
+{{2}}
 > **Click `Add Images`.**
 
-{{3-99}}
+
+{{3}}
 > **`Browse` for the `camera 1` images and select the `image_l` directory.**
 > 
 > - If you are using install MATLAB this will be where ever you unzipped the files earlier.
 > - If you are using MATLAB in your browser, this will be the `dvsa` -> `dataset` -> `image_l` directory already provided.
+>
+> ![](images/browse.png)
 
-{{4-99}}
+{{4}}
 > `Browse` for the `camera 2` images and select the `image_r` directory.
 > 
 > - If you are using install MATLAB this will be where ever you unzipped the images earlier.
 > - If you are using MATLAB in your browser, this will be the `dvsa` -> `dataset` -> `image_r` directory already provided.
 
-{{5-99}}
+{{5}}
 > Change the `Properties` of the checkerboard. 
 >
 > - `Size of the checkerboard square` should be 100mm (or 10cm).
 >
 > ![](images/d.png)
 
-{{6-99}}
+{{6}}
 > Click `OK`.
 
-{{7-99}}
+{{7}}
 > Wait.
 > 
 > - If you have done the previous steps you should see the following pop ups appear.
+> 
 >   1. `Analysing images`.
+>
+>   ![](images/analyzing.png)
 > 
 >   2. `Detection Results`.
-> - Leave `Detection Results` open.
-
+> 
+>     - Leave this window open.
+>
+>   ![](images/detection_results.png)
 
 ## Detection Results
 
-Should give details of the `Total stereo pairs processed` and `Rejected stereo pairs`.
+You should be looking at the `Detection Results` window.
 
-{{1-99}}
+- This window should should have details of the `Total stereo pairs processed` and `Rejected stereo pairs`.
+
+![](images/detection_results.png)
+
+{{1}}
 > **Click `view images` to see the rejected images.**
+>
+> ![Images from individual pairs are shown side by side.](images/rejected_images_b.png)
 
 **What do you notice about the rejected images?**
 
@@ -132,22 +205,31 @@ Should give details of the `Total stereo pairs processed` and `Rejected stereo p
 *In some cases the entire target is absent.*
 
 </details>
+  
 
-![Images from individual pairs are shown side by side.](images/rejected_images_b.png)
 
-{{2-99}}
+
+
+
+
+
+{{2}}
 > **Click `OK` to close the `Rejected Images` window.**
 
-{{3-99}}
+{{3}}
 > **Click `OK` to close the `Detection Results` window.**
 
 ## Calibration
 
-See that the images for the stereo pairs are different.
+You should now be on the calibration screen with the images loaded.
+
+![](images/calibration_window.png)
+
+**See that the images for the stereo pairs are different.**
 
 - This is because the cameras are in different positions.
 
-See that the checkerboard pattern has been detected in each image.
+**See that the checkerboard pattern has been detected in each image.**
 
 - Corner points of the inner checkerboard squares are marked with circles.
 - Checkerboard pattern is a known size, so the distance between the circles is known.
@@ -155,10 +237,52 @@ See that the checkerboard pattern has been detected in each image.
 - Checkerboard pattern is a rectangle, not a square.
   - To avoid possible confusion regarding the orientation of the target. 
 
-## Calibrate
+{{1}}
+> **Click `Calibrate`.**
+>
+> ![](images/calibrate_play.png)
 
+{{2}}
+> Wait.
+> 
+> - If you have done the previous steps you should see the following pop ups appear.
+>
+>   - `Calibration Progress`
 
-1. Click `Calibrate`.
-  - If you have done the previous steps you should see the following pop ups appear.
-    1. `Calibration Progress`
-2. Wait.
+## Results
+
+{{1}}
+> Double click on `stereoParams` in the workspace to see the results.
+
+{{2}}
+> Double click on `PoseCamera2`.
+> 
+> - This is the relative position of camera 2 with respect to camera 1.
+
+{{3}}
+> `PoseCamera2` is a structure containing multiple pieces of information.
+>
+> - `Translation` is the $[X, Y, Z]$ positions.
+> 
+>     - In millimeters.
+> - `R` is the 3x3 rotation matrix.
+>
+>     - In radians.
+> - `A` is the 4x4 transformation matrix.
+>
+>     - I.e. the combination of `R` and `Translation`.
+> 
+> Let's look at `A`.
+>
+> - Which should look something like this:
+> 
+> $$
+ \begin{Bmatrix}
+    a & b & c & d & e & f \\
+    g & h & i & j & k & l \\
+    m & n & o & p & q & r \\
+    s & t & u & v & w & x \\
+    y & z & ä & ö & ü &
+    \htmlStyle{color: red; font-size: 26px}{ß}
+ \end{Bmatrix}
+ $$
