@@ -13,7 +13,9 @@ comment:  Short activity based for identifying the extrinsic parameters of a cam
           Although we are using the stereo camera calibrator app for this activity, the 
           principles are the same for any multi camera calibration with a shared field of view.
 
-link: https://dscroft.github.io/liascript_materials/assets/styles.css
+classroom: false
+icon: ../assets/logo.svg
+logo: images/garage.png
 -->
 
 # Stereo Calibrator Activity
