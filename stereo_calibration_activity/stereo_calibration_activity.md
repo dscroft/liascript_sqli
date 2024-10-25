@@ -261,30 +261,85 @@ You should now be on the calibration screen with the images loaded.
 > 
 > - This is the relative position of camera 2 with respect to camera 1.
 
+`PoseCamera2` is a structure containing multiple pieces of information.
+
+- `Translation` is the $[X, Y, Z]$ positions.
+  - In millimeters.
+- `R` is the 3x3 rotation matrix.
+  - In radians.
+- `A` is the 4x4 transformation matrix.
+  - I.e. the combination of `R` and `Translation`.
+
+$$
+ \begin{bmatrix}
+   \htmlStyle{color: green}{R_{00}} & \htmlStyle{color: green}{R_{01}} & \htmlStyle{color: green}{R_{02}} & \htmlStyle{color: red}{X} \\
+   \htmlStyle{color: green}{R_{10}} & \htmlStyle{color: green}{R_{11}} & \htmlStyle{color: green}{R_{12}} & \htmlStyle{color: red}{Y} \\
+   \htmlStyle{color: green}{R_{20}} & \htmlStyle{color: green}{R_{21}} & \htmlStyle{color: green}{R_{22}} & \htmlStyle{color: red}{Z} \\
+   \htmlStyle{color: lightgrey}{0.0} & \htmlStyle{color: lightgrey}{0.0} & \htmlStyle{color: lightgrey}{0.0} & \htmlStyle{color: lightgrey}{1.0}
+ \end{bmatrix}
+$$
+
 {{3}}
-> `PoseCamera2` is a structure containing multiple pieces of information.
->
-> - `Translation` is the $[X, Y, Z]$ positions.
-> 
->     - In millimeters.
-> - `R` is the 3x3 rotation matrix.
->
->     - In radians.
-> - `A` is the 4x4 transformation matrix.
->
->     - I.e. the combination of `R` and `Translation`.
-> 
-> Let's look at `A`.
+> Look at  `A`.
 >
 > - Which should look something like this:
 > 
 > $$
- \begin{Bmatrix}
-    a & b & c & d & e & f \\
-    g & h & i & j & k & l \\
-    m & n & o & p & q & r \\
-    s & t & u & v & w & x \\
-    y & z & ä & ö & ü &
-    \htmlStyle{color: red; font-size: 26px}{ß}
- \end{Bmatrix}
- $$
+ \begin{bmatrix}
+   0.9937680 & -0.0869434 &  0.0697565 & 10.123456 \\
+   0.0906732 &  0.9945112 & -0.0522085 & 20.234567 \\
+  -0.0648344 &  0.0582081 &  0.9961969 & 30.345678 \\
+   0.0       &  0.0       &  0.0       & 1.0
+ \end{bmatrix}
+$$
+>
+> The X, Y, Z values should be immediately understandable, just be aware that they are in millimeters.
+
+{{4}}
+> The orientation information is less comprehensible but we can use matlab to convert these results to a more human friendly format by entering the following command in to the matlab command window.
+> 
+> - `rad2deg( rotm2eul( stereoParams.PoseCamera2.R, "XYZ" ) )`
+> 
+> This is going to take the rotation matrix `R` and convert it to Euler angles (roll, pitch, yaw). 
+>
+> Then we convert the angles from radians to degrees.
+> 
+> - There are also [online converters](https://www.andre-gaschler.com/rotationconverter/) available. 
+
+
+
+## Answers
+
+The image pairs were taken from pair of cameras mounted on a simulated Range Rover.
+
+For this scenario the cameras were deliberately miss-aligned in order to create a issue for sensor fusion.
+
+Because this is a simulated environment rather than reality we can easily extract actual positions and orientations of the cameras to compare against the results of the calibration.
+
+<details>
+<summary>**Actual Position**</summary>
+
+The right hand camera is positioned exactly 0.2m (or 200mm) to the side of the left hand camera.
+
+With a relative orientation of:
+
+- Roll: 1.3146272
+- Pitch: -9.8854197
+- Yaw: 10.113703
+</details>
+
+It is extremely unlikely that the calibration values that you have obtained will match these exactly.
+
+- Especially with the limited number of images used.
+- There are additional steps that could be taken to improve the calibration.
+
+  - But they add time and complexity.
+
+The important thing is that the values are within the right ballpark.
+
+- If the values are wildly different then could be an issue with the calibration process.
+- Or it could indicate that the cameras are not correctly aligned.
+
+![](images/cameras.png "Camera positions and orientations on the simulated vehicle.") ![](images/cameras2.png "Positions as seen from other side.") ![](images/cameras3.png "Top down view.")
+
+
