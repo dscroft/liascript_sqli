@@ -40,9 +40,14 @@ Both tools function near identically once open but running the software is diffe
 > **Select the appropriate option below.**
 
 <details>
-<summary>Installed MATLAB</summary>
+<summary>**Installed MATLAB**</summary>
 
-{{2}} 
+{{2}}
+> **Download the calibration images from [here](dataset.zip).**
+>
+> - Unzip (extract) the contents to a location you can easily find, you will need them later.
+
+{{3}} 
 > **Using the provided laptop open MATLAB.**
 >
 > This activity has been tested on MATLAB R2022b through R2024a.
@@ -55,7 +60,7 @@ Both tools function near identically once open but running the software is diffe
 > But standard locations are `/usr/local/MATLAB/R20xxx/bin/matlab` or `/usr/local/bin/matlab`.
 
 
-{{3}}
+{{4}}
 > When finished you should have a screen that looks like the one below.
 >
 > ![](images/matlab_loaded_local.png)
@@ -63,7 +68,7 @@ Both tools function near identically once open but running the software is diffe
 </details>
 
 <details>
-<summary>MATLAB Online</summary>
+<summary>**MATLAB Online**</summary>
 
 {{2}}
 > **Go to [https://matlab.mathworks.com](https://matlab.mathworks.com).**
@@ -316,18 +321,6 @@ For this scenario the cameras were deliberately miss-aligned in order to create 
 
 Because this is a simulated environment rather than reality we can easily extract actual positions and orientations of the cameras to compare against the results of the calibration.
 
-<details>
-<summary>**Actual Position**</summary>
-
-The right hand camera is positioned exactly 0.2m (or 200mm) to the side of the left hand camera.
-
-With a relative orientation of:
-
-- Roll: 1.3146272
-- Pitch: -9.8854197
-- Yaw: 10.113703
-</details>
-
 It is extremely unlikely that the calibration values that you have obtained will match these exactly.
 
 - Especially with the limited number of images used.
@@ -339,6 +332,19 @@ The important thing is that the values are within the right ballpark.
 
 - If the values are wildly different then could be an issue with the calibration process.
 - Or it could indicate that the cameras are not correctly aligned.
+
+
+<details>
+<summary style="background-color: lightgreen;">**Click for correct values.**</summary>
+
+> The right hand camera is positioned exactly 0.2m (or 200mm) to the side of the left hand camera.
+> 
+> With a relative orientation of:
+> 
+> - Roll: 1.31°
+> - Pitch: -9.89°
+> - Yaw: 10.11°
+</details>
 
 ![](images/cameras.png "Camera positions and orientations on the simulated vehicle.") ![](images/cameras2.png "Positions as seen from other side.") ![](images/cameras3.png "Top down view.")
 
