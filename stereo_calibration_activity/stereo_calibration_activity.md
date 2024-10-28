@@ -349,3 +349,10 @@ The important thing is that the values are within the right ballpark.
 ![](images/cameras.png "Camera positions and orientations on the simulated vehicle.") ![](images/cameras2.png "Positions as seen from other side.") ![](images/cameras3.png "Top down view.")
 
 
+## End of Activity
+
+Well done, with any luck you know have a better understanding of how to calibrate a pair of cameras.
+
+Other sensors calibrations depend on the same principles but the specifics will vary according to the sensor type.
+
+Calibrating lidar for example relies on identifying the physical shape of the calibration target in the point cloud data as opposed to the pattern on the target.
