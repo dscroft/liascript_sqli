@@ -82,7 +82,7 @@ Both tools function near identically once open but running the software is diffe
 {{4}}
 > **Click `Open MATLAB Online`.**
 >
-> IMAGE
+> ![](images/open_online.png)
 
 
 {{5}}
