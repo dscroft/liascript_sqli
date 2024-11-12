@@ -174,29 +174,7 @@ query = "SELECT COUNT(*) FROM users WHERE username = '" +
 > *<strong class="lia-bold" id="loginQuery"></strong>*
 
 
-<div> 
-    <label for="username">Username:</label><br>
-    <input class="lia-quiz__input" type="text" id="username" name="username" value=""><br>
-    <label for="password">Password:</label><br>
-    <input class="lia-quiz__input" type="password" id="password" name="password" value=""><br><br>
-    <input class="lia-btn--outline" onclick="alert('a'); create_query()" type="submit" value="Login">
-</div>
-
-<script>
-    function update_query()
-    {
-        let username = document.getElementById("username").value;
-        let password = document.getElementById("password").value;
-        
-        document.getElementById("loginQuery").innerHTML = 
-            "SELECT COUNT(*) FROM users WHERE username = '" + username + "' AND password = '" + password + "';";
-    }
-
-    document.getElementById("username").addEventListener("input", update_query);
-    document.getElementById("password").addEventListener("input", update_query);
-
-    update_query();
-</script>
+@AlaSQL.login
 
 
 
@@ -239,29 +217,7 @@ What we have done is to trick the website into running a different query than it
 
 Instead of a query that checks the username and password, we have a query that just checks the username and then logs in regardless of the password that was entered.
 
-<div> 
-    <label for="username">Username:</label><br>
-    <input class="lia-quiz__input" type="text" id="username" name="username" value=""><br>
-    <label for="password">Password:</label><br>
-    <input class="lia-quiz__input" type="password" id="password" name="password" value=""><br><br>
-    <input class="lia-btn--outline" onclick="" type="submit" value="Login">
-</div>
-
-<script>
-    function update_query()
-    {
-        let username = document.getElementById("username").value;
-        let password = document.getElementById("password").value;
-        
-        document.getElementById("loginQuery").innerHTML = 
-            "SELECT COUNT(*) FROM users WHERE username = '" + username + "' AND password = '" + password + "';";
-    }
-
-    document.getElementById("username").addEventListener("input", update_query);
-    document.getElementById("password").addEventListener("input", update_query);
-
-    update_query();
-</script>
+@AlaSQL.login
 
 ![Her daughter is named Help I'm trapped in a driver's license factory.](https://imgs.xkcd.com/comics/exploits_of_a_mom.png "XKCD: \"EXPLOITS OF A MOM\"")
 
@@ -276,10 +232,20 @@ If you are using the search function on a website it is quite likely that the we
 
 For example [](https://vehicleenquiry.service.gov.uk/)
 
+We can abuse the SQL functionality to extract information from any table in the database.
+
+- As long as we match the number of columns in the original query.
+
+In this example we show how a query for extracing information from the vehicles table can be injected to return information from the users table.
+
+
 ```sql
 SELECT make, color
 FROM vehicles
-WHERE reg = '' or 1=1 union select password, email from  users; -- ' limit 1;
+WHERE reg = '' --';
+UNION 
+SELECT password, email 
+FROM users;
 ```
 @AlaSQL.eval("#queryResults")
 
