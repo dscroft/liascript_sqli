@@ -57,16 +57,16 @@ attribute: [jQuery](https://jquery.com/)
            is licensed under [OpenJS Foundation](https://openjsf.org/)
 
 @AlaSQL.login
-<div> 
+<form autocomplete="off"> 
     <label for="username">Username:</label><br>
-    <input class="lia-quiz__input" type="text" id="username" name="username" value=""><br>
+    <input class="lia-quiz__input" type="text" id="username" value=""><br>
     <label for="password">Password:</label><br>
-    <input class="lia-quiz__input" type="password" id="password" name="password" value=""><br><br>
+    <input class="lia-quiz__input" type="password" id="password" value=""><br><br>
 
-    <input class="lia-btn--outline" type="submit" id="login" value="Login">
+    <input class="lia-btn--outline" type="button" id="login" value="Login">
     <span style="display:inline-block; width: 20px;"></span>
     <strong id="status"></strong>
-</div>
+</form>
 
 <script>
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
