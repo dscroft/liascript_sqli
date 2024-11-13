@@ -3,7 +3,7 @@ name: Generate and Release PDF
 on:
   push:
     branches:
-      - main
+      - generate-pdf
 
 jobs:
   run_exporter:
