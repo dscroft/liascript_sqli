@@ -29,19 +29,17 @@ script: https://unpkg.com/simple-web-serial@latest/dist/simple-web-serial.min.js
     else
     {
         send.output("Creating connection");
-        window.connection = SimpleWebSerial.setupSerialConnection({});
+        window.connection = SimpleWebSerial.setupSerialConnection({
+            //warnAboutUnregisteredEvents: false,
+        });
     }
     
     function status_update()
     {
         if( window.connection.ready() == null )
-        {
             send.output("Disconnected");
-        }
         else
-        {
             send.output("Connected");
-        }
     }
 
     document.getElementById("connect").addEventListener("click", function() {
@@ -77,8 +75,57 @@ style="max-width: 400px;" -->
 ````
 @end
 
+@WebSerial.logger
+<script>
+    console.log( "$(@0)" )
+</script>
+@end
+
 -->
 
 # Module Macros
 
+## Arduino
 
+Rather than attempting to roll our own communications protocol.
+
+For example:
+
+```c
+// Include the library
+#include <SimpleWebSerial.h>
+
+// Create an instance of the library
+SimpleWebSerial WebSerial;
+
+void setup() 
+{
+  // Initialize serial communication
+  Serial.begin(57600);
+  
+  // Define events to listen to and their callback
+  WebSerial.on("event-to-arduino", eventCallback); 
+}
+
+void eventCallback(JSONVar data) 
+{
+    // Do something, even sending events right back!
+    WebSerial.send("event-from-arduino", data);
+};
+
+unsigned long timer = 0;
+
+void loop() 
+{
+  const unsigned long now = millis();
+  if( now - timer > 3000 )
+  {
+    WebSerial.send("arduino-alive", JSONVar(now) );
+    timer = now;
+  }
+  
+  // Check for new serial data every loop
+  WebSerial.check();
+  delay(5);
+}
+```
