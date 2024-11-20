@@ -10,8 +10,8 @@ comment:  This is placeholder module to save macros used in other modules.
 
 @end
 
-script: http://localhost:8000/_can_hacking/html5-canvas-speedometer/js/fraction.min.js
-script: http://localhost:8000/_can_hacking/html5-canvas-speedometer/js/speedometer2.js
+script: https://dscroft.github.io/liascript_materials/can_hacking/assets/html5-canvas-speedometer/js/fraction.min.js
+script: https://dscroft.github.io/liascript_materials/can_hacking/assets/html5-canvas-speedometer/js/speedometer.js
 
 @onload
 window.turnSignalsStates = {
@@ -78,7 +78,7 @@ document.getElementById('right').addEventListener('click', sendSignalMsg);
 ## Dashboard
 
 <div id="speedometer">
-<div style="display: none;"><img id="sprite" src="http://localhost:8000/_can_hacking/html5-canvas-speedometer/assets/icons.svg"></div>
+<div style="display: none;"><img id="sprite" src="https://dscroft.github.io/liascript_materials/can_hacking/assets/html5-canvas-speedometer/assets/icons.svg"></div>
 <canvas id="canvas" width="425" height="210"></canvas>
 </div>
 
