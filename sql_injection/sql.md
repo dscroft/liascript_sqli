@@ -12,9 +12,9 @@ narrator: US English Female
 comment:  
 
 classroom: false
-icon: ../assets/logo.svg
+icon: https://raw.githubusercontent.com/dscroft/liascript_materials/refs/heads/main/assets/logo.svg
 
-
+scormimport: https://raw.githubusercontent.com/dscroft/liascript_materials/refs/heads/main/sql_injection/macros_sql.md
 import: macros_sql.md
 -->
 
