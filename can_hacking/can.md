@@ -48,7 +48,159 @@ waitForConnection();
 @end
 -->
 
-# aaa
+# CAN hacking activity
+
+This activity works best in groups of 3, ideally every member will have their own computer.
+
+In the event that there are insuffient participants or computers then groups of 2 or 4 will also work, individuals on their own will struggle.
+
+<!--
+style="background-color: firebrick; color: white"
+-->
+>⚠️**Warning**
+>
+> For the practical part of the activity you will need to be using a reasonably up to date version of Chrome, Edge or Opera.
+>
+> - Smartphone and tablet browsers generally will not work.
+
+
+## Format
+
+### DBC format
+
+Various ways to represent CAN frame structure, we are going to use DBC.
+
+For example: the accelerator pedal position information for a 2010 Toyota Prius could be represented as shown below.
+
+```ascii
+Frame ID     Frame Name
+     \         /       .------ Frame Length (in bytes)
+      \       /       /              Max value
+       v      V       V                  |
+   BO_ 81 GAS_PEDAL: 8 XXX               V
+    SG_ GAS_PEDAL : 23|8@0+ (0.005,0) [0|1] '' XXX
+           ^        ^ ^  ^ ^    ^   ^   ^ 
+          /        / /   |  \    \   \   \
+Signal name       / /    |   \    \   \   Min value
+      Starting bit /     |    \    \  Offset
+        Length (in bits) |     \  Scaling factor
+                         |  Signed/Unsigned
+                Motorola/Intel Format 
+```                        
+
+What this specifies is that accelerator pedal position will be transmitted as a value between 0 and 200, stored in bits 23 to 16 and that pedal position can be sent in 0.5% increments.
+
+<details>
+<summary>**Umm, actually...**</summary>
+
+> In reality the frame ID is 581 but for the sake of simplicity for this task we are using classic CAN and so have to keep our frame IDs <256
+</details>
+
+### Encoding information
+
+An accelerator pedal pressed three quarters down would have a value of 0.75.
+
+Below is our 8 byte CAN frame, for the pedal position we set bits 23-16.
+
+<!--
+style="
+  max-width: 600px;" -->
+```ascii
+         +----+----+----+----+----+----+----+----+
+       0 |  7 |  6 |  5 |  4 |  3 |  2 |  1 |  0 |
+         +----+----+----+----+----+----+----+----+
+       1 | 15 | 14 | 13 | 12 | 11 | 10 |  9 |  8 |
+         ╔════╦════╦════╦════╦════╦════╦════╦════╗
+       2 ║ 23 ║ 22 ║ 21 ║ 20 ║ 19 ║ 18 ║ 17 ║ 16 ║
+         ╚════╩════╩════╩════╩════╩════╩════╩════╝
+Bytes  3 | 31 | 30 | 29 | 28 | 27 | 26 | 25 | 24 |
+         +----+----+----+----+----+----+----+----+
+       4 | 39 | 38 | 37 | 36 | 35 | 34 | 33 | 32 |
+         +----+----+----+----+----+----+----+----+
+       5 | 47 | 46 | 45 | 44 | 43 | 42 | 41 | 40 |
+         +----+----+----+----+----+----+----+----+
+       6 | 55 | 54 | 53 | 52 | 51 | 50 | 49 | 48 |
+         +----+----+----+----+----+----+----+----+
+       7 | 63 | 62 | 61 | 60 | 59 | 58 | 57 | 56 |
+         +----+----+----+----+----+----+----+----+
+```
+
+Apply the scaling factor 0.75 / 0.005 = 150, that's 0x96 in hexadecimal or 10010110 in binary.
+
+Which appears as shown below:
+
+<!--
+style="
+  max-width: 600px;" -->
+```ascii
+         +----+----+----+----+----+----+----+----+
+       0 |    |    |    |    |    |    |    |    |
+         +----+----+----+----+----+----+----+----+
+       1 |    |    |    |    |    |    |    |    |
+         ╔════╦════╦════╦════╦════╦════╦════╦════╗
+       2 ║  1 ║  0 ║  0 ║  1 ║  0 ║  1 ║  1 ║  0 ║
+         ╚════╩════╩════╩════╩════╩════╩════╩════╝
+Bytes  3 |    |    |    |    |    |    |    |    |
+         +----+----+----+----+----+----+----+----+
+       4 |    |    |    |    |    |    |    |    |
+         +----+----+----+----+----+----+----+----+
+       5 |    |    |    |    |    |    |    |    |
+         +----+----+----+----+----+----+----+----+
+       6 |    |    |    |    |    |    |    |    |
+         +----+----+----+----+----+----+----+----+
+       7 |    |    |    |    |    |    |    |    |
+         +----+----+----+----+----+----+----+----+
+```
+
+Assuming that there was no other information being sent in this frame, the complete message could look something like:
+
+0000000000000000100101100000000000000000000000000000000000000000
+
+But as that's quite unwheldly it's not common to represent the information in hexademical (base 16) format. 
+In which case it appears as 0x0000960000000000
+
+
+# Activity 
+
+These instructions are written on the assumption that you are working as part of a group of 3 as there are 3 roles that need to be filled.
+
+These roles will be referred to as Alice, Bob and Charlie.
+
+- Alice 👩 will be controlling the vehicle by sending CAN frames.
+- Bob 👨 will be monitoring the vehicle and seeing that the CAN frames are recieved.
+- Charlie 😈 will be attempting to manipulate the vehicle.
+
+```ascii
+
+💻👩   💻😈   💻👨
+ |      |      | 
+ *------*------*
+```
+
+#### Hardware setup
+
+This is the setup we are trying to achieve. 
+
+- Each group member connected via USB to one of the Arduino circuit boards.
+- The Arduino board connected via CAN into a simple CAN bus.
+- The CAN bus terminated by appropriate resistors at each end.
+
+```ascii
+             .-------------------. .-------------------.
++--------+   |      +--------+   | |      +--------+   |
+|        |   +-.    |        |   | |      |        |   +-.  
+|   CANL o <-+ |    |   CANL o <-.-.      |   CANL o <-+ |
+|        |     #    |        |            |        |     #
+|        |     #    |        |            |        |     # Resistor
+|        |     #    |        |            |        |     #
+|   CANH * <-+ |    |   CANH * <-.-.      |   CANH * <-+ |
+|USB     |   +-.    |USB     |   | |      |USB     |   +-.
++-#------+   |      +-#------+   | |      +-#------+   |
+  |          |        |          | |        |          |
+ 💻👩        |       💻😈        | |       💻👨        |
+             .-------------------. .-------------------.
+```           
+
 
 
 ## Sender
@@ -135,12 +287,12 @@ document.getElementById('right').addEventListener('click', sendSignalMsg);
         let liatable =  "<!-- data-type='none' \n" +
                         "     data-title='Recived CAN frames' \n" + 
                         "     data-sortable='false' -->\n" +
-                        "| Timetstamp | CAN Frame ID | Data |\n" +
+                        "| Timestamp | CAN Frame ID | Data |\n" +
                         "|-|-|------|\n"
 
         for (let i = 0; i < buffer.length; ++i) {  
             let hex = buffer[i][2].map(byte => byte.toString(16).padStart(2, '0').toUpperCase()).join('');
-            liatable += `| ${buffer[i][0]} | ${buffer[i][1]} | ${hex} |\n`;
+            liatable += `| ${buffer[i][0]} | ${buffer[i][1]} | 0x${hex} |\n`;
         }
 
         send.lia( "LIASCRIPT: "+liatable );
