@@ -16,6 +16,151 @@ icon: https://raw.githubusercontent.com/dscroft/liascript_materials/refs/heads/m
 
 scormimport: https://raw.githubusercontent.com/dscroft/liascript_materials/refs/heads/main/sql_injection/macros_sql.md
 import: macros_sql.md
+
+@LoginExample
+SQL query being run:
+
+<strong id="loginQuery"></strong><br>
+
+<form autocomplete="off"> 
+    <label for="username">Username:</label><br>
+    <input class="lia-quiz__input" type="text" id="username" value="@0"><br>
+    <label for="password">Password:</label><br>
+    <input class="lia-quiz__input" type="password" id="password" value=""><br><br>
+
+    <input class="lia-btn--outline" type="button" id="login" value="Login">
+    <span style="display:inline-block; width: 20px;"></span>
+    <strong id="status"></strong>
+</form>
+
+<script>
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// Generate a login form with an SQLi vulnerability and validate it against the ALASQL database.
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    function update_query()
+    {
+        let username = document.getElementById("username").value;
+        let password = document.getElementById("password").value;
+        
+        document.getElementById("loginQuery").innerHTML = 
+            "SELECT COUNT(*) FROM users WHERE username = '" + username + "' AND password = '" + password + "';";
+    }
+
+    function login()
+    {
+        try 
+        {
+            let query = document.getElementById("loginQuery").innerHTML;
+            let result = alasql(query);
+
+            let status = document.getElementById("status");
+            if( result[0]["COUNT(*)"] > 0 )
+            {
+                status.innerHTML = "Logged in successfully!";
+                status.style.color = "green";
+            }
+            else
+            {
+                status.innerHTML = "Login failed!";
+                status.style.color = "red";
+            }
+        } 
+        catch(e) 
+        {
+          let error = new LiaError(e.message, 1);
+          try {
+            let log = e.message.match(/.*line (\d):.*\n.*\n.*\n(.*)/);
+            error.add_detail(0, e.name+": "+log[2], "error", log[1] -1 , 0);
+          } 
+          catch(e){}
+
+          throw error;
+        }
+      }
+
+    document.getElementById("username").addEventListener("input", update_query);
+    document.getElementById("password").addEventListener("input", update_query);
+    document.getElementById("login").addEventListener("click", login);
+
+    update_query();
+</script>
+
+@AlaSQL.buildTable_users
+@end
+
+@SearchExample
+SQL query being run:
+
+<strong id="searchQuery"></strong><br>
+
+--------------------
+
+<form autocomplete="off"> 
+    <input class="lia-quiz__input" type="text" id="registration" placeholder="Enter reg"><br>
+    
+    <input class="lia-btn--outline" type="button" id="search" value="Search">
+    <span style="display:inline-block; width: 20px;"></span>
+    <strong id="status"></strong>
+</form>
+
+<div id="searchResults"></div><br>
+
+<script>
+    function update_query()
+    {
+        let registration = document.getElementById("registration").value;
+        
+        document.getElementById("searchQuery").innerHTML = 
+            "SELECT reg, color, make, model FROM vehicles WHERE reg = '" + registration + "';";
+    }
+
+    function search()
+    {
+        try 
+        {
+            let query = document.getElementById("searchQuery").innerHTML;
+            let result = alasql(query);
+
+            console.log( result )
+
+            let status = document.getElementById("searchResults");
+            if( result.length > 0 )
+            {
+                status.innerHTML = "Results:<br>";
+                for( let i=0; i<result.length; i+=1 )
+                {
+                  console.log( result[i] )
+                  status.innerHTML += "<h3>"+result[i].reg+"</h3>"+result[i].color+" "+result[i].make+" "+result[i].model+"<br>";
+                }
+                status.style.color = "";
+            }
+            else
+            {
+                status.innerHTML = "No vehicles found!";
+                status.style.color = "red";
+            }
+        } 
+        catch(e) 
+        {
+          let error = new LiaError(e.message, 1);
+          try {
+            let log = e.message.match(/.*line (\d):.*\n.*\n.*\n(.*)/);
+            error.add_detail(0, e.name+": "+log[2], "error", log[1] -1 , 0);
+          } 
+          catch(e){}
+
+          throw error;
+        }
+      }
+
+    document.getElementById("registration").addEventListener("input", update_query);
+    document.getElementById("search").addEventListener("click", search);
+
+    update_query();
+
+</script>
+@AlaSQL.buildTable_vehicles
+@end
 -->
 
 # SQL Injection
@@ -42,6 +187,7 @@ Experience working with rectangular data (data in rows and columns) is required.
 
 No experience writing SQL code is expected or required for this module. 
 
+
 ## Relational databases
 
 Relational databases are a way of storing data in tables.
@@ -50,11 +196,12 @@ Relational databases are a way of storing data in tables.
 - Each column represents a different attribute of the data.
 
   - I.e. Name, Age, Address, etc.
+
 - Each row represents a different record.
 
   - I.e. A different person, a different vehicle, etc.
 
-For example, the following table represents a list of vehicles.
+For example, the vehicles table:
 
 <!-- data-type="none" -->
 | vin | make | model | year | reg | color |
@@ -64,6 +211,30 @@ For example, the following table represents a list of vehicles.
 | 4T1BE32K44U876543 | Toyota    | Camry     | 2004 | XY34 FSD | Silver |
 | 2C3KA43R88H125478 | Chrysler  | 300       | 2008 | GH56 BNB | Gray   |
 | 1FTFW1ET0EKE39357 | Ford      | F-150     | 2014 | LM98 QWE | White  |
+
+Tables can then be linked together according to their attributes (columns) to describe relationships between records (rows) in different tables.
+
+```ascii
++-----------+       +----------+        
+| users     |       | owners   |        +---------+       
++-----------+       +----------+        | vehicle |       
+| id        +------>| userid   |        +---------+       
+| username  |       | vin      +------->| vin     |       
+| password  |       +----------+        | make    | 
+| firstname |                           | model   |
+| lastname  |                           | year    |
+| address   |                           | reg     |
+| city      |                           | color   |
+| county    |                           +---------+
+| postal    |     
+| phone     |     
+| email     |     
++-----------+
+```
+
+
+
+
 
 ## SELECT
 
@@ -83,43 +254,73 @@ Looking at the example below:
 {{1}}
 > **Press the button below the SQL query to see it in action.**
 >
-> - You can edit the SQL query to see the effect that it has on the information returned.
+> - Press the <i class="icon icon-compile-circle"></i> button below.
 
 ```sql
 SELECT *
 FROM vehicles
 LIMIT 5;
 ```
-@AlaSQL.eval("#vehicleTableA")
+@AlaSQL.eval("#vehicleTableExample")
 
-<table id="vehicleTableA" border="1"></table><br>
+<table id="vehicleTableExample" border="1"></table><br>
 
 @AlaSQL.buildTable_vehicles
 
-## Authentication
-
-If you are using the search function on a website or logging in it is quite likely that the website's servers will run a query such as the one below to find the information you are looking for.
-
-
-
-
-
-### Login
-
-<form action="/login" method="post">
-    <label for="username">Username:</label><br>
-    <input class="lia-quiz__input" type="text" id="username" name="username"><br>
-    <label for="password">Password:</label><br>
-    <input class="lia-quiz__input" type="password" id="password" name="password"><br><br>
-    <input class="lia-btn--outline" type="submit" value="Login">
-</form>
+### Task
 
 {{1}}
-> **Enter the following login details.**
+>  **Try editing the SQL query to see the effect that it has on the information returned.**
 >
-> - Username: Moose147
-> - Password: hunter2
+> - Try changing the limit to see the effect it has on the number of rows returned.
+> - Try changing the table name.
+> - Try changing the columns returned.
 
+```sql
+SELECT *
+FROM vehicles
+LIMIT 5;
+```
+@AlaSQL.eval("#vehicleTableTask")
+
+<table id="vehicleTableTask" border="1"></table><br>
+
+@AlaSQL.buildTable_vehicles
+
+
+
+## Behind the scenes
+
+We have seen that we can use SQL to retrieve data from a database.
+
+- If we can simply connect to the database and run queries then we can retrieve any data that we want.
+
+But the use of SQL is not always so blatant.
+
+- Often it will be used behind the scenes by websites and applications to retrieve information on our behalf.
+
+For example, the search and login pages of a website are likely to use SQL queries to retrieve information from the database.
+
+- The retrieved information is then presented to use in a more user-friendly way.
+
+
+
+## Authentication
+
+When we log into a website we commonly supply a username and password.
+
+If our username and password match the details stored in the database then we are allowed to log in.
+
+For example, if our username is "Moose147" and our password is "hunter2" then the following query would be run to check if we can log in.
+
+- `SELECT COUNT(*)` counts the number of rows returned.
+- `FROM users` specifies that we are looking in the `users` table.
+- `WHERE username = 'Moose147'` specifies that we are looking for a row where the username is "Moose147".
+- `AND password = 'hunter2'` specifies that the password column of the row also has to be "hunter2".
+
+------------------------------------------------------------
+
+If the username and password match then the count will be 1.
 
 ```sql
 SELECT COUNT(*)
@@ -131,7 +332,9 @@ WHERE username = 'Moose147'
 
 <table id="correctLoginTable" border="1"></table><br>
 
-If try with the wrong password then the query will return 0.
+------------------------------------------------------------
+
+If they do not match then the count will be 0.
 
 ```sql
 SELECT COUNT(*)
@@ -149,9 +352,9 @@ WHERE username = 'Moose147'
 
 
 
-### a
+### Task 1
 
-The issue comes in how the website creates that SQL query.
+The issue comes in how the (some) programmers creates the SQL query that is being run.
 
 The simplest and most obvious way is to use string concatenation.
 
@@ -165,59 +368,84 @@ query = "SELECT COUNT(*) FROM users WHERE username = '" +
         username + "' AND password = '" + password + "';"
 ```
 
+```cpp -Example in C++
+string username = get_username();
+string password = get_password();
+
+string query = "SELECT COUNT(*) FROM users WHERE username = '" + 
+               username + "' AND password = '" + password + "';";
+```
+
 {{1}}
-> **Try entering the login details into the form below and see the resulting SQL query.**
+> **Try entering the login details into the form below.**
+>
+> This query is being created using string concatenation.
 >
 > - Username: Moose147
 > - Password: hunter2
 >
-> *<strong class="lia-bold" id="loginQuery"></strong>*
+> Press the login button.
+>
+> <script input="submit" default="Hint">
+document.getElementById("username").value = "Moose147";
+document.getElementById("password").value = "hunter2";
+document.getElementById("username").dispatchEvent(new Event('input'));
+"Hint";
+</script>
+
+@LoginExample
 
 
-@AlaSQL.login
 
+### Task 2
 
+The problem with string concatenation is that it does not take into account all the possibilities for what the user might enter.
 
+- Specifically, what would happen if the user entered some SQL?
 
-
-### b
-
-The problem with this approach is that it does not consider just that the user might enter.
-
-- Specifically, what would happen if the user entered a password that contained from SQL syntax?
+------------------------------------------------------------
 
 {{1}}
 > **Try entering the login details into the form below and see the resulting SQL query.**
 >
 > - Username: Moose147'; --
-> - Password: Doesn't matter.
+> - Password: *Doesn't matter.*
 >
 > It is important that you enter the username exactly as it is written above.
 >
-> *<strong class="lia-bold" id="loginQuery"></strong>*
+> Press the login button.
+>
+> <script input="submit" default="Hint">
+document.getElementById("username").value = "Moose147'; --";
+document.getElementById("username").dispatchEvent(new Event('input'));
+"Hint";
+</script>
 
-**What do you think is happening here?**
+@LoginExample
 
-- We entered a single `Moose147'` character. 
+{{2}}
+> **What do you think is happening here?**
+> 
+> - We entered a single `Moose147'` character. 
+> 
+>   - This closed the username string so we are looking for a username of nothing.
+> 
+> - ';'
+> 
+>     - This finished the query.
+> 
+> - Finally we entered `--`.
+> 
+>    - In SQL this is the syntax for a comment.
+>    - It means that everything following it not part of the query and should be ignored.
+>    - I.e. the password check.
+> 
+> What we have done is to trick the website into running a different query than it intended.
+> 
+> Instead of a query that checks the username and password, we have a query that just checks the username and then logs in regardless of the password that was entered.
 
-  - This closed the username string so we are looking for a username of nothing.
 
-- ';'
-
-    - This finished the query.
-
-- Finally we entered `--`.
-
-   - In SQL this is the syntax for a comment.
-   - It means that everything following it not part of the query and should be ignored.
-   - I.e. the password check.
-
-
-What we have done is to trick the website into running a different query than it intended.
-
-Instead of a query that checks the username and password, we have a query that just checks the username and then logs in regardless of the password that was entered.
-
-@AlaSQL.login
+### Comic
 
 ![Her daughter is named Help I'm trapped in a driver's license factory.](https://imgs.xkcd.com/comics/exploits_of_a_mom.png "XKCD: \"EXPLOITS OF A MOM\"")
 
@@ -229,22 +457,70 @@ Instead of a query that checks the username and password, we have a query that j
 
 If you are using the search function on a website it is quite likely that the website's servers will run a query such as the one below to find the information you are looking for.
 
-
-For example [](https://vehicleenquiry.service.gov.uk/)
+For example: [www.check-mot.service.gov.uk](https://www.check-mot.service.gov.uk/)
 
 We can abuse the SQL functionality to extract information from any table in the database.
 
 - As long as we match the number of columns in the original query.
 
-In this example we show how a query for extracing information from the vehicles table can be injected to return information from the users table.
+------------------------------------------------------------
 
+In this example we show how a query for extracting information from the vehicles table can be injected to return information from the users table.
 
 ```sql
-SELECT make, color
+SELECT reg, color, make, model
 FROM vehicles
-WHERE reg = '' --';
+WHERE reg = 'HW21 FKL';
+```
+@AlaSQL.eval("#searchResults")
+@AlaSQL.buildTable_vehicles
+
+<table id="searchResults" border="1"></table><br>
+
+
+### Task 1
+
+@SearchExample
+
+{{1}}
+> **Search for the vehicle with the registration HW21 FKL.**
+>
+> <script input="submit" default="Hint">
+document.getElementById("registration").value = "HW21 FKL";
+document.getElementById("registration").dispatchEvent(new Event('input'));
+"Hint";
+</script>
+
+### Task 2
+
+@SearchExample
+
+{{1}}
+> **Using what we have learned so far, can you extract information on all the vehicles?**
+> 
+> <script input="submit" default="Hint">
+document.getElementById("registration").value = "HW21 FKL' or 1=1; --";
+document.getElementById("registration").dispatchEvent(new Event('input'));
+</script>
+
+### Task 3
+
+This is all well and good but we can do more than just extract information from the vehicles table.
+
+- With the UNION operator we can start pulling data from any table.
+
+This is the key lesson regarding SQL injection.
+
+- A single vulnerable query can be exploited to gain access to the complete contents of a database.
+
+------------------------------------------------------------
+
+```sql
+SELECT reg, color, make, model
+FROM vehicles
+WHERE reg = ''
 UNION 
-SELECT password, email 
+SELECT username, password, email, phone 
 FROM users;
 ```
 @AlaSQL.eval("#queryResults")
@@ -254,19 +530,38 @@ FROM users;
 @AlaSQL.buildTable_users
 @AlaSQL.buildTable_vehicles
 
+------------------------------------------------------------
+
+@SearchExample
+
+<script>
+  document.getElementById("registration").value = "' UNION SELECT username, password, email, phone FROM users; --";
+  document.getElementById("registration").dispatchEvent(new Event('input'));
+  send.clear();
+</script>
+
+------------------------------------------------------------
+
+
+
 
 
 ## Extremes
 
 The examples shown so far are the most egregious examples of SQL injection.
-
 Any competent programmer should be able to avoid these.
-
-- SOURCE
 
 However, there are more subtle examples.
 A vulnerable query anywhere in the code can potentially be exploited to gain access to the complete contents of a database.
-In extreme examples individual letters can be extracted databases based on the time that it takes for a query to run. 
+
+------------------------------------------------------------
+
+At the extreme end of the spectrum, individual letters can be extracted from databases based on the time that it takes for a query to run. 
+
+For example login pages do not reveal the actual results of the query to the user. They just return a success or failure message.
+
+However, if the query is vulnerable to SQL injection then an attacker can use the time that it for that success or failure message to appear to determine the contents of the database.
+
 For example, SQL queries that will wait 1 second if the first letter of the password on the first row is between A and M. By timing the response from the server the attacker can determine if the passwords starts A-M or N-Z. 
 Repeat with A-F and so on until the first letter is revealed.
 Repeat for second letter until whole password is revealed.
@@ -277,85 +572,14 @@ Repeat for every table for complete database.
 This would obviously be a slow process but it is very possible and more importantly is achievable with cybersecurity/hacking tools that can automatically identify explore the vulnerable query and automatically perform this data exflitration.
 
 
+## Solutions
+
+The most egregious thing regarding SQL injection is that it is a solved problem and has been for decades.
+
+- Instead of using string concatenation to build queries, we can use prepared statements.
+- Or we can use an ORM (Object Relational Mapping) library that will handle the SQL for us.
+- Or we can use SQL placeholders.
+
+The issue with SQL injection is not that it is difficult to solve, it is an ongoing lack of awareness of the problem and software best practices. 
 
 
-
-
-
-## Example
-
-```sql
-SELECT *
-FROM users
-LIMIT 8;
-```
-@AlaSQL.eval("#dataTable2a")
-
-<table id="dataTable2a" border="1"></table><br>
-
-<div style = "display:none;">
-
-@AlaSQL.buildTable_users
-
-</div>
-
-
-
-## Example
-
-Stores information in tables that can be linked together.
-
-Structured Query Language (SQL) is the standard language for querying these types of databases.
-
-```sql
-SELECT *
-FROM users
-LIMIT 8;
-```
-@AlaSQL.eval("#dataTable2a")
-
-<table id="dataTable2a" border="1"></table><br>
-
-<div style = "display:none;">
-
-@AlaSQL.buildTable_users
-
-</div>
-
-
-## Logins
-
-If for example you want to log into a website, it is quite possible that website's servers will run a query such as the one below to see if
-
-
-## Search 
-
-If you are using the search function on a website it is quite likely that the website's servers will run a query such as the one below to find the information you are looking for.
-
-The problem occurs when the website does not properly sanitise the input from the user. 
-
-Information coming from an outside source should always be treated with suspicion.
-
-The reason being that the user is in control of what information they enter and so the user can enter anything they want.
-
-
-```sql
-SELECT *
-FROM vehicles;
-```
-@AlaSQL.eval("#vehicleTableA")
-
-<table id="vehicleTableA" border="1"></table><br>
-
-Equally we can modify our query to only return the information we are interested in.
-
-```sql
-SELECT *
-FROM vehicles
-WHERE year = 2008;
-```
-@AlaSQL.eval("#vehicleTableB")
-
-<table id="vehicleTableB" border="1"></table><br>
-
-@AlaSQL.buildTable_vehicles
