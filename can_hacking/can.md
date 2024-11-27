@@ -316,3 +316,4 @@ document.getElementById('right').addEventListener('click', sendSignalMsg);
 
 @Dashboard.display
 
+
