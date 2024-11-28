@@ -12,9 +12,8 @@ narrator: US English Female
 comment:  
 
 classroom: false
-icon: https://raw.githubusercontent.com/dscroft/liascript_materials/refs/heads/main/assets/logo.svg
+icon: https://dscroft.github.io/liascript_materials/assets/logo.svg
 
-scormimport: https://raw.githubusercontent.com/dscroft/liascript_materials/refs/heads/main/sql_injection/macros_sql.md
 import: macros_sql.md
 
 @LoginExample
@@ -22,9 +21,11 @@ SQL query being run:
 
 <strong id="loginQuery"></strong><br>
 
+----------------------------------
+
 <form autocomplete="off"> 
     <label for="username">Username:</label><br>
-    <input class="lia-quiz__input" type="text" id="username" value="@0"><br>
+    <input class="lia-quiz__input" type="text" id="username"><br>
     <label for="password">Password:</label><br>
     <input class="lia-quiz__input" type="password" id="password" value=""><br><br>
 
@@ -42,8 +43,15 @@ SQL query being run:
         let username = document.getElementById("username").value;
         let password = document.getElementById("password").value;
         
-        document.getElementById("loginQuery").innerHTML = 
-            "SELECT COUNT(*) FROM users WHERE username = '" + username + "' AND password = '" + password + "';";
+        let query = "SELECT COUNT(*) FROM users WHERE username = '" + username + "' AND password = '" + password + "';";
+
+        // shade the comments
+        const reg = /(.*)(--.*)/;
+        const match = query.match( reg );
+        if( match )
+          document.getElementById("loginQuery").innerHTML = `${match[1]}<span style='color: lightgrey'>${match[2]}</span>`;
+        else
+          document.getElementById("loginQuery").innerHTML = query;
     }
 
     function login()
@@ -85,7 +93,6 @@ SQL query being run:
     update_query();
 </script>
 
-@AlaSQL.buildTable_users
 @end
 
 @SearchExample
@@ -110,8 +117,14 @@ SQL query being run:
     {
         let registration = document.getElementById("registration").value;
         
-        document.getElementById("searchQuery").innerHTML = 
-            "SELECT reg, color, make, model FROM vehicles WHERE reg = '" + registration + "';";
+        let query = "SELECT reg, color, make, model FROM vehicles WHERE reg = '" + registration + "';";
+
+        const reg = /(.*)(--.*)/;
+        const match = query.match( reg );
+        if( match )
+          document.getElementById("searchQuery").innerHTML = `${match[1]}<span style='color: lightgrey'>${match[2]}</span>`;
+        else
+          document.getElementById("searchQuery").innerHTML = query;           
     }
 
     function search()
@@ -159,7 +172,7 @@ SQL query being run:
     update_query();
 
 </script>
-@AlaSQL.buildTable_vehicles
+
 @end
 -->
 
@@ -265,7 +278,6 @@ LIMIT 5;
 
 <table id="vehicleTableExample" border="1"></table><br>
 
-@AlaSQL.buildTable_vehicles
 
 ### Task
 
@@ -285,7 +297,6 @@ LIMIT 5;
 
 <table id="vehicleTableTask" border="1"></table><br>
 
-@AlaSQL.buildTable_vehicles
 
 
 
@@ -346,7 +357,6 @@ WHERE username = 'Moose147'
 
 <table id="wrongLoginTable" border="1"></table><br>
 
-@AlaSQL.buildTable_users
 
 
 
@@ -473,7 +483,6 @@ FROM vehicles
 WHERE reg = 'HW21 FKL';
 ```
 @AlaSQL.eval("#searchResults")
-@AlaSQL.buildTable_vehicles
 
 <table id="searchResults" border="1"></table><br>
 
@@ -501,6 +510,7 @@ document.getElementById("registration").dispatchEvent(new Event('input'));
 > <script input="submit" default="Hint">
 document.getElementById("registration").value = "HW21 FKL' or 1=1; --";
 document.getElementById("registration").dispatchEvent(new Event('input'));
+"Hint"
 </script>
 
 ### Task 3
@@ -526,9 +536,6 @@ FROM users;
 @AlaSQL.eval("#queryResults")
 
 <table id="queryResults" border="1"></table><br>
-
-@AlaSQL.buildTable_users
-@AlaSQL.buildTable_vehicles
 
 ------------------------------------------------------------
 
