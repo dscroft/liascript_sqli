@@ -290,10 +290,25 @@ LIMIT 5;
 {{1}}
 >  **Try editing the SQL query to see the effect that it has on the information returned.**
 >
-> - Try changing the limit to see the effect it has on the number of rows returned.
-> - Try changing the table name.
-> - Try changing the columns returned.
+> - Try changing the limit to see the effect it has on the number of rows returned. 
+>
+> <script input="submit" default="Hint">
+"Try changing 'LIMIT 5' to 'LIMIT 10'."
+</script>
 
+> - Try changing the table name.
+>
+> <script input="submit" default="Hint">
+"Try changing 'vehicles' to 'users'."
+</script>
+
+> - Try changing the columns returned.
+>
+> <script input="submit" default="Hint">
+"Try changing 'SELECT *' to 'SELECT username, password', assuming you are using the users table."
+</script>
+
+<!-- id="queryText" -->
 ```sql
 SELECT *
 FROM vehicles
