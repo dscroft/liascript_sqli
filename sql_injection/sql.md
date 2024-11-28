@@ -178,6 +178,12 @@ SQL query being run:
 
 # SQL Injection
 
+SQL Injection (SQLi) is a type of security vulnerability that occurs when an attacker can manipulate an application's SQL queries by injecting malicious input into fields meant for user-provided data. 
+This can lead to unauthorized access to a database, allowing attackers to retrieve, modify, or delete sensitive information.
+
+In the OWASP Top 10, SQL Injection has historically been one of the most critical and common vulnerabilities. 
+Although it now falls under the broader "Injection" category rather than it's own, SQL Injection remains one of the most dangerous and frequently exploited injection types.
+
 ## What is SQL
 
 Structured Query Language, or SQL, is a relational database solution that has been around for decades. 
