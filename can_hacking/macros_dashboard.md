@@ -14,6 +14,23 @@ script: assets/html5-canvas-speedometer/js/fraction.min.js
 script: assets/html5-canvas-speedometer/js/speedometer.js
 
 @onload
+console.log("Loading dashboard module");
+
+async function waitForDashboard() {
+  while (!window.Dashboard) {
+    await new Promise(resolve => setTimeout(resolve, 100)); // wait 100ms
+  }
+  // Once window.connection is available
+  dashboardAvailable();
+}
+
+function dashboardAvailable() {
+    console.log("Dashboard module loaded");
+}
+
+// Call this function to start the waiting process
+waitForDashboard();
+
 window.turnSignalsStates = {
         'left':  false,
         'right': false
@@ -46,10 +63,6 @@ window.gas = 0.5;
 window.mileage = 12345;
 window.tacho = 0.0;
 
-window.update_dash = function()
-{
-    window.Dashboard.draw( document.getElementById("canvas"), window.speed, window.tacho, window.gas, window.mileage, window.turnSignalsStates, window.iconsStates );
-}
 @end
 
 @Dashboard.display
@@ -57,13 +70,19 @@ window.update_dash = function()
 <div style="display: none;"><img id="sprite" src="assets/html5-canvas-speedometer/assets/icons.svg"></div>
 <canvas id="canvas" width="560" height="280"></canvas>
 </div>
-
+aaaab
 <script>
     setInterval(function()
     {
         try
         {
-            window.update_dash();
+            window.Dashboard.draw( document.getElementById("canvas"), 
+                window.speed, 
+                window.tacho, 
+                window.gas, 
+                window.mileage, 
+                window.turnSignalsStates, 
+                window.iconsStates );
         }
         catch (error)
         {
@@ -79,54 +98,26 @@ window.update_dash = function()
 
 # Module Macros
 
-## Controller
-
-<input type="checkbox" id="left">
-<input type="checkbox" id="right" value="1">
-
-<script>
-let sendSignalMsg = function()
-{
-    console.log("Sending signal message");
-
-    let data = ( document.getElementById('left').checked ? (1 << 6) : 0 ) +
-               ( document.getElementById('right').checked ? (1 << 5) : 0 );
-
-    window.connection.send( "can-send", [660, data] );
-}
-
-document.getElementById('left').addEventListener('click', sendSignalMsg);
-document.getElementById('right').addEventListener('click', sendSignalMsg);
-</script>
-
 ## Dashboard
 
-<div id="speedometer">
-<div style="display: none;"><img id="sprite" src="assets/html5-canvas-speedometer/assets/icons.svg"></div>
-<canvas id="canvas" width="425" height="210"></canvas>
-</div>
+@Dashboard.display
 
 <script>
-    setTimeout(function()
+    setInterval(function()
     {
-        if( window.Dashboard === undefined )
-            send.lia( "Waiting for Dashboard module to load" );
-        else
-        {
-            window.update_dash();
-            "LIA: clear"
-        }
-    }, 1000/16);
+        console.log( "Update" );
 
-    window.connection.on('can-recv', function(data) 
-    {
-        if( data[0] == 660 ) // ENGINE_DATA
+        try
         {
-            window.turnSignalsStates.left = data[1] & (1 << 6);
-            window.turnSignalsStates.right = data[1] & (1 << 5);
+            window.mileage += 1;
+            window.speed = (window.speed + 0.001) % 1;
+            window.tacho = (window.tacho + 0.01) % 1;
+            window.gas = (window.gas + 0.01) % 1;
+        }
+        catch (error)
+        {
+            console.error("An error occurred:", error);
         }
         
-    });
-
-    "LIA: wait"
+    }, 1000/10);
 </script>
