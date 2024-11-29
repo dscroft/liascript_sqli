@@ -28,9 +28,6 @@ function connectionAvailable() {
         {   
             // data[1] is an array of multiple integers where each element represents the value of a byte
             // convert into a single integer where the lsb were contained in element 0
-            let data = 0;
-            for (let i = 0; i < msg[1].length; i++)
-                data |= msg[1][i] << (8 * i);
 
             // true if bit 6 of data is set
             window.turnSignalsStates.left = (data & (1 << 6)) !== 0;     
@@ -39,7 +36,12 @@ function connectionAvailable() {
         else if( msg[0] == 81 ) // GAS_PEDAL
         {
             window.tacho = msg[1][2] * 0.005;
-        }     
+        }
+        else if( msg[0] == 20 ) // SEATS_DOORS
+        {
+            window.iconsStates.seatBelt = (msg[1][7] & (1 << 6)) !== 0;
+            window.iconsStates.doors = (msg[1][5] & 0x3C) !== 0;
+        }   
     });
 }
 
@@ -166,9 +168,17 @@ These instructions are written on the assumption that you are working as part of
 
 These roles will be referred to as Alice, Bob and Charlie.
 
-- Alice 👩 will be controlling the vehicle by sending CAN frames.
-- Bob 👨 will be monitoring the vehicle and seeing that the CAN frames are recieved.
-- Charlie 😈 will be attempting to manipulate the vehicle.
+- Alice 👩 will be playing the part of the driver.
+
+  - In this scenario it is a drive by wire vehicle, so the accelerator pedal is not physically linked to anything.
+  - Pressing the pedal causes a signal to be sent to the engine control unit (ECU) to perform the appropriate action. 
+- Bob 👨 will be playing the part of the vehicle.
+
+  - We are just going to simulate the dashboard for this exercise.
+  - But the same principles apply to the engine control unit (ECU) and other vehicle systems.
+- Charlie 😈 will be playing a malicious attacker.
+
+  - They have gained access to the CAN bus and can send and receive messages.
 
 ```ascii
 
@@ -203,24 +213,45 @@ This is the setup we are trying to achieve.
 
 
 
-## Sender
+### 👩 Alice 
 
 @WebSerial.defaultManager
 
-Indicators
+**Indicators**
 
 <input type="checkbox" id="left">
 <input type="checkbox" id="right">
 
-Accelerator
+-------------------
+
+**Headlights**
+
+-------------------
+
+**Doors**
+
+<input type="checkbox" id="fl_door">
+<input type="checkbox" id="fr_door">
+<input type="checkbox" id="rl_door">
+<input type="checkbox" id="rr_door">
+
+-------------------
+
+**Seatbelts**
+
+<input type="checkbox" id="seatbelt">
+
+-------------------
+
+**Accelerator**
 
 <div class="slidecontainer">
     <input type="range" min="0" max="200" value="0" id="accelerator"><span id="accelerator_level"></span>
 </div>
 
+-------------------
+
 <script>
-
-
 function update_accel_status()
 {
     console.log("Sending accelerator message");
@@ -231,42 +262,99 @@ function update_accel_status()
     /*Toyota prius
       BO_ 581 GAS_PEDAL: 8 XXX
         SG_ GAS_PEDAL : 23|8@0+ (0.005,0) [0|1] "" XXX*/
-
     let data = Math.min(200,Math.max(0,parseInt(value)));   
     let bytes = [ 0, 0, data, 0, 0, 0, 0, 0 ];
-    window.connection.send( "can-send", [81, bytes] );
+    try {
+        window.connection.send( "can-send", [81, bytes] );
+    } catch (error) {
+        //console.error("An error occurred:", error);
+    }
 }
 
 document.getElementById("accelerator").addEventListener("input", update_accel_status );
 update_accel_status();
 </script>
 
+<script>
+function update_door_status()
+{
+    console.log("Sending door message");
+
+    /*BO_ 1568 SEATS_DOORS: 8 XXX
+        SG_ SEATBELT_DRIVER_UNLATCHED : 62|1@0+ (1,0) [0|1] "" XXX
+        SG_ DOOR_OPEN_FL : 45|1@0+ (1,0) [0|1] "" XXX
+        SG_ DOOR_OPEN_RL : 42|1@0+ (1,0) [0|1] "" XXX
+        SG_ DOOR_OPEN_RR : 43|1@0+ (1,0) [0|1] "" XXX
+        SG_ DOOR_OPEN_FR : 44|1@0+ (1,0) [0|1] "" XXX*/
+    let byte5 = ( document.getElementById('fl_door').checked ? (1 << 5) : 0 ) +
+                ( document.getElementById('fr_door').checked ? (1 << 4) : 0 ) +
+                ( document.getElementById('rl_door').checked ? (1 << 3) : 0 ) +
+                ( document.getElementById('rr_door').checked ? (1 << 2) : 0 );
+    let byte7 = document.getElementById('seatbelt').checked ? (1 << 6) : 0;
+    let bytes = [ 0, 0, 0, 0, 0, byte5, 0, byte7 ];
+
+    console.log( bytes );
+    try {
+        window.connection.send( "can-send", [20, bytes] );
+    } catch (error) {
+        //console.error("An error occurred:", error);
+    }
+}
+
+document.getElementById('seatbelt').addEventListener('click', update_door_status);
+document.getElementById('fl_door').addEventListener('click', update_door_status);
+document.getElementById('fr_door').addEventListener('click', update_door_status);
+document.getElementById('rl_door').addEventListener('click', update_door_status);
+document.getElementById('rr_door').addEventListener('click', update_door_status);
+</script>
+
+<script>
+function update_light_status()
+{
+  /*BO_ 1570 LIGHT_STALK: 8 SCM
+      SG_ AUTO_HIGH_BEAM : 37|1@0+ (1,0) [0|1] "" XXX
+      SG_ FRONT_FOG : 27|1@0+ (1,0) [0|1] "" XXX
+      SG_ PARKING_LIGHT : 28|1@0+ (1,0) [0|1] "" XXX
+      SG_ LOW_BEAM : 29|1@0+ (1,0) [0|1] "" XXX
+      SG_ HIGH_BEAM : 30|1@0+ (1,0) [0|1] "" XXX
+      SG_ DAYTIME_RUNNING_LIGHT : 31|1@0+ (1,0) [0|1] "" XXX*/
+}
+</script>
 
 <script>
 let sendSignalMsg = function()
 {
     console.log("Sending signal message");
 
-    let data = ( document.getElementById('left').checked ? (1 << 6) : 0 ) +
-               ( document.getElementById('right').checked ? (1 << 5) : 0 );
+    let byte0 = ( document.getElementById('left').checked ? (1 << 6) : 0 ) +
+                ( document.getElementById('right').checked ? (1 << 5) : 0 );
+    let bytes = [ byte0, 0, 0, 0, 0, 0, 0, 0 ];
 
-    //convert data to an 8 byte array where hte lsb of data are stored in 
-    let bytes = new Array(8);
-    for (let i = 0; i < bytes.length; i++) 
-        bytes[i] = (data >> (i * 8)) & 0xFF;
-    
-    window.connection.send( "can-send", [203, bytes] );
+    try {
+      window.connection.send( "can-send", [203, bytes] );
+    }
+    catch (error) {
+        //console.error("An error occurred:", error);
+    }
 }
 
 document.getElementById('left').addEventListener('click', sendSignalMsg);
 document.getElementById('right').addEventListener('click', sendSignalMsg);
 </script>
 
-
-
-## Hacker
+### 👨 Bob 
 
 @WebSerial.defaultManager
+
+@Dashboard.display
+
+### 😈 Charlie 
+
+#### Intercept
+
+@WebSerial.defaultManager
+
+<div id="framesLogger"></div>
 
 <script style="display: block">
     let buffer = [];
@@ -310,10 +398,63 @@ document.getElementById('right').addEventListener('click', sendSignalMsg);
 </script>
 
 
-## Recviever
+#### Retransmit
 
 @WebSerial.defaultManager
 
-@Dashboard.display
+<label>CAN Frame ID: </label><input class="lia-quiz__input" type="text" id="can_frame_id" placeholder="123">
+<label>CAN Data: </label><input class="lia-quiz__input" type="text" id="can_frame_data" placeholder="A1B2C3D4E5F6">
+<label>Duration: </label><span id="duration"></span><input type="range" min="1" max="30" value="1" id="can_frame_duration">
+<label>Rate: </label><span id="hz"></span><input type="range" min="1" max="100" value="1" id="can_frame_hz">
+
+<script>
+  function update_frame_duration()
+  {
+    let value = document.getElementById("can_frame_duration").value;
+    document.getElementById("duration").innerHTML = value + " second/s";
+  }
+
+  function update_frame_hz()
+  {
+    let value = document.getElementById("can_frame_hz").value;
+    document.getElementById("hz").innerHTML = value + " Hz";
+  }
+
+  document.getElementById("can_frame_duration").addEventListener("input", update_frame_duration);
+  update_frame_duration();
+
+  document.getElementById("can_frame_hz").addEventListener("input", update_frame_hz);
+  update_frame_hz();
+
+</script>
+
+<script input="submit" default="Send">
+  let id = parseInt(document.getElementById("can_frame_id").value);
+  let data = document.getElementById("can_frame_data").value.split(' ').map(byte => parseInt(byte, 16));
+
+  let duration = parseFloat(document.getElementById("can_frame_duration").value);
+  let hz = parseFloat(document.getElementById("can_frame_hz").value);
+  let num = duration * hz;
+
+  send.lia("Sending "+num+" messages");
+
+  let interval = setInterval(() => {
+    //window.connection.send("can-send", [id, data]);
+    num -= 1;
+    send.lia( "Messages remaining: "+num );
+
+    
+    if (num <= 0) {
+      clearInterval(interval);
+      send.lia("Done");
+    }
+  }, 1000 / hz);
+
+
+  //console.log( "Sending CAN frame: "+id+" "+data );
+</script>
+
+
+
 
 

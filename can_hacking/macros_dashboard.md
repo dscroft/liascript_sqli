@@ -70,7 +70,7 @@ window.tacho = 0.0;
 <div style="display: none;"><img id="sprite" src="assets/html5-canvas-speedometer/assets/icons.svg"></div>
 <canvas id="canvas" width="560" height="280"></canvas>
 </div>
-aaaab
+
 <script>
     setInterval(function()
     {
