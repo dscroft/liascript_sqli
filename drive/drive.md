@@ -7859,9 +7859,8 @@ Search: <input type="text" id="search" placeholder="nosh">
 
     let search = document.getElementById( "search" ).value;
 
-    let liatable = "<!-- data-type='none' -->\n"+
-                   "| Url | Image |\n"+
-                   "|-----|-------|\n";
+    let liatable = "";
+    let count = 0;
 
     for (const [key, value] of Object.entries(text)) {
         if (value.toUpperCase().includes(search.toUpperCase())) 
@@ -7870,11 +7869,12 @@ Search: <input type="text" id="search" placeholder="nosh">
             let url = window.url_lookup[img];
 
             console.log(`Match found in key: ${key}`);
-            liatable += "| ["+img+"](" + url + ") | ![]("+url+") |\n";
+            liatable += "![]("+url+")\n\n";
+            count += 1;
         }
     }
 
-    send.lia( "LIASCRIPT: "+liatable )
+    send.lia( "LIASCRIPT: **"+count+" results**\n\n"+liatable )
 </script>
 
 
