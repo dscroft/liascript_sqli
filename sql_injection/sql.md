@@ -19,7 +19,7 @@ import: macros_sql.md
 @LoginExample
 SQL query being run:
 
-<strong id="loginQuery"></strong><br>
+<strong id="loginQuery"></strong><strong id="loginComment" style="color: lightgrey"></strong><br>
 
 ----------------------------------
 
@@ -49,9 +49,15 @@ SQL query being run:
         const reg = /(.*)(--.*)/;
         const match = query.match( reg );
         if( match )
-          document.getElementById("loginQuery").innerHTML = `${match[1]}<span style='color: lightgrey'>${match[2]}</span>`;
+        {
+          document.getElementById("loginQuery").textContent = match[1];
+          document.getElementById("loginComment").textContent = match[2];
+        }
         else
-          document.getElementById("loginQuery").innerHTML = query;
+        {
+          document.getElementById("loginQuery").textContent = query;
+          document.getElementById("loginComment").textContent = "";
+        }
     }
 
     function login()
@@ -98,7 +104,7 @@ SQL query being run:
 @SearchExample
 SQL query being run:
 
-<strong id="searchQuery"></strong><br>
+<strong id="searchQuery"></strong><strong id="searchComment" style="color: lightgrey"></strong><br>
 
 --------------------
 
@@ -122,9 +128,15 @@ SQL query being run:
         const reg = /(.*)(--.*)/;
         const match = query.match( reg );
         if( match )
-          document.getElementById("searchQuery").innerHTML = `${match[1]}<span style='color: lightgrey'>${match[2]}</span>`;
+        {
+          document.getElementById("searchQuery").textContent = match[1];
+          document.getElementById("searchComment").textContent = match[2];
+        }
         else
-          document.getElementById("searchQuery").innerHTML = query;           
+        {
+          document.getElementById("searchQuery").textContent = query;
+          document.getElementById("searchComment").textContent = "";
+        }
     }
 
     function search()
