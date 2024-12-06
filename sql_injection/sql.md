@@ -136,7 +136,7 @@ SQL query being run:
         {
           document.getElementById("searchQuery").textContent = query;
           document.getElementById("searchComment").textContent = "";
-        }
+        }         
     }
 
     function search()
