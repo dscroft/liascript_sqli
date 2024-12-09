@@ -234,7 +234,7 @@ Relational databases are a way of storing data in tables.
 
 For example, the vehicles table:
 
-<!-- data-type="none" -->
+<!-- class="notranslate" translate="no" data-type="none" -->
 | vin | make | model | year | reg | color |
 | --- | ---- | ----- | ---- | --- | ----- |
 | 3GCPCSE05BG193249 | Chevrolet | Silverado | 2011 | HW21 FKL | Black  |
@@ -245,6 +245,7 @@ For example, the vehicles table:
 
 Tables can then be linked together according to their attributes (columns) to describe relationships between records (rows) in different tables.
 
+<!-- class="notranslate" translate="no" -->
 ```ascii
 +-----------+       +----------+        
 | users     |       | owners   |        +---------+       
