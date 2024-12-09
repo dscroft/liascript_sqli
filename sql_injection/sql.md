@@ -19,7 +19,10 @@ import: macros_sql.md
 @LoginExample
 SQL query being run:
 
-<strong id="loginQuery"></strong><br>
+
+<div class="notranslate" translate="no">
+  <strong id="loginQuery"></strong>
+</div><br>
 
 ----------------------------------
 
@@ -98,7 +101,9 @@ SQL query being run:
 @SearchExample
 SQL query being run:
 
-<strong id="searchQuery"></strong><br>
+<div class="notranslate" translate="no">
+  <strong id="searchQuery"></strong>
+</div><br>
 
 --------------------
 
@@ -222,7 +227,7 @@ Relational databases are a way of storing data in tables.
 
 For example, the vehicles table:
 
-<!-- data-type="none" -->
+<!-- class="notranslate" translate="no" data-type="none" -->
 | vin | make | model | year | reg | color |
 | --- | ---- | ----- | ---- | --- | ----- |
 | 3GCPCSE05BG193249 | Chevrolet | Silverado | 2011 | HW21 FKL | Black  |
@@ -233,6 +238,7 @@ For example, the vehicles table:
 
 Tables can then be linked together according to their attributes (columns) to describe relationships between records (rows) in different tables.
 
+<!-- class="notranslate" translate="no" -->
 ```ascii
 +-----------+       +----------+        
 | users     |       | owners   |        +---------+       
