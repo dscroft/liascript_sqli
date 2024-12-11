@@ -38,24 +38,24 @@ window.turnSignalsStates = {
     
 window.iconsStates = {
         // main circle
-        'dippedBeam': 1,
-        'brake':      1,
-        'drift':      1,
-        'highBeam':   1,
-        'lock':       1,
-        'seatBelt':   1,
-        'engineTemp': 2,
-        'stab':       1,
-        'abs':        1,
+        'dippedBeam': 0,
+        'brake':      0,
+        'drift':      0,
+        'highBeam':   0,
+        'lock':       0,
+        'seatBelt':   0,
+        'engineTemp': 0,
+        'stab':       0,
+        'abs':        0,
         // right circle
-        'gas':        2,
-        'trunk':      1,
-        'bonnet':     1,
-        'doors':      1,
+        'gas':        0,
+        'trunk':      0,
+        'bonnet':     0,
+        'doors':      0,
         // left circle
-        'battery':    2,
-        'oil':        2,
-        'engineFail': 2
+        'battery':    0,
+        'oil':        0,
+        'engineFail': 0
     }
 
 window.speed = 0.0;
@@ -74,10 +74,13 @@ window.tacho = 0.0;
 <script>
     setInterval(function()
     {
+        let change = ( window.tacho - 0.2 ) * 0.01;
+        window.speed = Math.max( 0, Math.min( 1, window.speed + change ) );
+
         try
         {
             window.Dashboard.draw( document.getElementById("canvas"), 
-                window.speed, 
+                window.speed * 0.95 + ( 0.005 * Math.random() -0.0025 ), 
                 window.tacho, 
                 window.gas, 
                 window.mileage, 

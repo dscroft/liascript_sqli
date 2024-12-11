@@ -37,12 +37,12 @@ If you are using the desktop app the steps are very similar.
 >
 > - This will open a drop-down menu.
 >
-> ![](images/a.png)
+> ![](images/aa3.png)
 
 {{4}}
 > Select "University of Warwick" as your organisation.
 >
-> ![](images/b.png)
+> ![](images/bb3.png)
 
 {{5}}
 > Done!
