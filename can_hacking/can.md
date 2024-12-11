@@ -620,6 +620,8 @@ document.getElementById("can_frame_id").value = 203;
 document.getElementById("can_frame_data").value = "0x2000000000000000";
 document.getElementById("can_frame_duration").value = 1;
 document.getElementById("can_frame_hz").value = 1;
+document.getElementById("can_frame_duration").dispatchEvent(new Event('input'));
+document.getElementById("can_frame_hz").dispatchEvent(new Event('input'));
 
 "Send a frame to turn both indicators on."
 </script>
@@ -645,6 +647,8 @@ document.getElementById("can_frame_id").value = 81;
 document.getElementById("can_frame_data").value = "0x0000C80000000000";
 document.getElementById("can_frame_duration").value = 30;
 document.getElementById("can_frame_hz").value = 100;
+document.getElementById("can_frame_duration").dispatchEvent(new Event('input'));
+document.getElementById("can_frame_hz").dispatchEvent(new Event('input'));
 
 "Flooding the bus with frames saying the accelerator is fully pressed."
 </script>
