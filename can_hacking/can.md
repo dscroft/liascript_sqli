@@ -1,7 +1,7 @@
 <!--
-author:   André Dietrich
-email:    LiaScript@web.de
-version:  0.3.2
+author:   David Croft
+email:    david.croft@warwick.ac.uk
+version:  0.1.0
 language: en
 narrator: US English Male
 
