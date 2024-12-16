@@ -40,18 +40,20 @@ function connectionAvailable() {
         }
         else if( msg[0] == 20 ) // SEATS_DOORS
         {
-            window.iconsStates.seatBelt = (msg[1][7] & (1 << 6)) !== 0;
-            window.iconsStates.doors = (msg[1][5] & 0x3C) !== 0;
+            console.log("seats_doors");
+            
+            // oh god this code is terrible, figure out javascript conditional logic at some point
+            window.iconsStates.seatBelt = (msg[1][7] & (1 << 6)) !== 0 ? 1 : 0;
+            window.iconsStates.doors = (msg[1][5] & (1 << 5)) !== 0 || 
+                                       (msg[1][5] & (1 << 4)) !== 0 ||
+                                       (msg[1][5] & (1 << 3)) !== 0 ||
+                                       (msg[1][5] & (1 << 2)) ? 1 : 0;
         }
         else if( msg[0] == 40 ) // LIGHT_STALK
         {
-        console.log("light stalk");
-          console.log( (msg[1][0] & (1 << 5)) !== 0 );
+            console.log("light stalk");
             window.iconsStates.dippedBeam = (msg[1][0] & (1 << 5)) !== 0 ? 1 : 0;
             window.iconsStates.highBeam = (msg[1][0] & (1 << 6)) !== 0 ? 1 : 0;
-            window.iconsStates.fog = (msg[1][0] & (1 << 3)) !== 0 ? 1 : 0;
-
-            console.log( window.iconsStates.dippedBeam)
         }
     });
 }
@@ -61,9 +63,8 @@ waitForConnection();
 @end
 
 @can.intercept
-<div id="framesLogger"></div>
 
-<script style="display: block">
+<script style="display: block" modify="false">
     if( window.buffer ) {}
     else
         window.buffer = [];
@@ -79,8 +80,6 @@ waitForConnection();
 
     function displayBuffer()
     {
-        let table = document.getElementById("framesLogger");
-
         let liatable =  "<!-- data-type='none' \n" +
                         "     data-title='Recived CAN frames' \n" + 
                         "     data-sortable='false' -"+"->\n" + // bodge for macro parser
@@ -176,9 +175,9 @@ waitForConnection();
 
 <!-- data-type='none'
      data-sortable='false' -->
-| Off | Low | High | Fog |
-| :-: | :-: | :-: | :-: |
-| <input type="radio" name="headlights" value="off"> | <input type="radio" name="headlights" value="low"> | <input type="radio" name="headlights" value="high"> | <input type="checkbox" id="fog"> |
+| Off | Low | High |
+| :-: | :-: | :-: |
+| <input type="radio" name="headlights" value="off"> | <input type="radio" name="headlights" value="low"> | <input type="radio" name="headlights" value="high"> |
 
 -------------------
 
@@ -278,12 +277,10 @@ let sendLightStatus = function()
     console.log("Sending light message");
 
     let selectedHeadlight = document.querySelector('input[name="headlights"]:checked').value;
-    let fog = document.getElementById('fog').checked;
 
     console.log( selectedHeadlight );
 
     let byte0 = ( selectedHeadlight == 'auto' ? (1 << 1) : 0 ) +
-                ( fog ? (1 << 3) : 0 ) +
                 ( selectedHeadlight == 'low' ? (1 << 5) : 0 ) +
                 ( selectedHeadlight == 'high' ? (1 << 6) : 0 );
     let bytes = [ byte0, 0, 0, 0, 0, 0, 0, 0 ];
@@ -302,8 +299,6 @@ let sendLightStatus = function()
 document.querySelectorAll('input[name="headlights"]').forEach(element => {
   element.addEventListener('change', sendLightStatus);
 });
-
-document.getElementById('fog').addEventListener('click', sendLightStatus);
 </script>
 
 <script> <!-- indicators -->
@@ -620,8 +615,6 @@ document.getElementById("can_frame_id").value = 203;
 document.getElementById("can_frame_data").value = "0x2000000000000000";
 document.getElementById("can_frame_duration").value = 1;
 document.getElementById("can_frame_hz").value = 1;
-document.getElementById("can_frame_duration").dispatchEvent(new Event('input'));
-document.getElementById("can_frame_hz").dispatchEvent(new Event('input'));
 
 "Send a frame to turn both indicators on."
 </script>
@@ -647,8 +640,6 @@ document.getElementById("can_frame_id").value = 81;
 document.getElementById("can_frame_data").value = "0x0000C80000000000";
 document.getElementById("can_frame_duration").value = 30;
 document.getElementById("can_frame_hz").value = 100;
-document.getElementById("can_frame_duration").dispatchEvent(new Event('input'));
-document.getElementById("can_frame_hz").dispatchEvent(new Event('input'));
 
 "Flooding the bus with frames saying the accelerator is fully pressed."
 </script>

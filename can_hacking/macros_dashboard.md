@@ -72,10 +72,16 @@ window.tacho = 0.0;
 </div>
 
 <script>
-    setInterval(function()
+    window.dashboard_refresh = setInterval(function()
     {
         let change = ( window.tacho - 0.2 ) * 0.01;
         window.speed = Math.max( 0, Math.min( 1, window.speed + change ) );
+
+        if( !document.getElementById("canvas") )
+        {
+            clearInterval( window.dashboard_refresh );
+            return;
+        }
 
         try
         {
@@ -94,7 +100,7 @@ window.tacho = 0.0;
         
     }, 1000/16);
 
-"LIA: wait"
+    console.log( "init" );
 </script>
 @end
 -->
