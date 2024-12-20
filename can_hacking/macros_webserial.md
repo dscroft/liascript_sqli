@@ -16,6 +16,7 @@ script: https://unpkg.com/simple-web-serial@latest/dist/simple-web-serial.min.js
 <script id="connect" input="submit" default="Press to connect"></script>
 @end
 
+
 @WebSerial.status
 <script>
     send.output("Initialise");
@@ -36,10 +37,12 @@ script: https://unpkg.com/simple-web-serial@latest/dist/simple-web-serial.min.js
     
     function status_update()
     {
-        if( window.connection.ready() == null )
+        if( window.connection.ready() == null || window.connection.ready() == false )
             send.output("Disconnected");
         else
             send.output("Connected");
+
+        console.log( window.connection.ready() );
     }
 
     document.getElementById("connect").addEventListener("click", function() {
@@ -60,26 +63,59 @@ script: https://unpkg.com/simple-web-serial@latest/dist/simple-web-serial.min.js
 @end
 
 @WebSerial.__c
-    @WebSerial.connectButton
+    <script id="connect" input="submit" default="Press to connect">
+        window.connection.startConnection();
+        "Press to connect"
+    </script>
 @end
 
 @WebSerial.__s
-    @WebSerial.status
+    <script>
+        send.output("Initialise");
+
+        if( window.connection )
+        {
+            send.output("Reuse existing connection");
+            /* may need to revisit this section */
+            //window.connection.removeListeners();
+        }
+        else
+        {
+            send.output("Creating connection");
+            window.connection = SimpleWebSerial.setupSerialConnection({
+                //warnAboutUnregisteredEvents: false,
+            });
+        }
+
+        function status_update()
+        {
+            if( window.connection.ready() == null || window.connection.ready() == false )
+                send.output('LIASCRIPT: **Disconnected**<!-- style="color: red;" -->');
+            else
+                send.output('LIASCRIPT: **Connected**<!-- style="color: green;" -->');
+        }
+
+        window.connection.on("logger", function(msg)
+        {
+            console.log(msg)
+        });
+
+        setInterval(status_update, 500);
+
+        "LIA: wait"
+    </script>
 @end
 
 @WebSerial.defaultManager
-<!--
-style="max-width: 400px;" -->
-```` ascii
- .---------------------------------------------------.
- | Connection manager                                |
- +---------------------------------------------------+          
- | "@WebSerial.__c     ""@WebSerial.__s            " | 
- |                                                   |
- |                                                   |
- |                                                   |
- '---------------------------------------------------'
-````
+------------------------
+<div style="font-size: 16px;">
+**CAN bus connection**
+
+@WebSerial.__c
+@WebSerial.__s   
+</div>
+------------------------
+
 @end
 
 @WebSerial.logger

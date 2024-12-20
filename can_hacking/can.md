@@ -5,7 +5,7 @@ version:  0.1.0
 language: en
 narrator: US English Male
 
-logo:     logo.jpg
+icon: https://dscroft.github.io/liascript_materials/assets/logo.svg
 
 import: macros_webserial.md
 import: macros_dashboard.md
@@ -323,13 +323,20 @@ document.getElementById('left').addEventListener('click', sendSignalMsg);
 document.getElementById('right').addEventListener('click', sendSignalMsg);
 </script>
 @end
+
 -->
 
-# CAN hacking activity
+# Introduction
+
+This activity is designed to demonstrate how a malicious attacker can intercept and retransmit CAN frames on a CAN bus.
+
+This sort of attack should not work in a modern vehicle but certainly was possible in older vehicles and is still possible in other systems that use CAN.
+
+------------------------------
 
 This activity works best in groups of 3, ideally every member will have their own computer.
 
-In the event that there are insuffient participants or computers then groups of 2 or 4 will also work, individuals on their own will struggle.
+In the event that there are insufficient participants or computers then groups of 2 or 4 will also work, individuals on their own will struggle.
 
 <!--
 style="background-color: firebrick; color: white"
@@ -341,9 +348,11 @@ style="background-color: firebrick; color: white"
 > - Smartphone and tablet browsers generally will not work.
 
 
-## Format
+# CAN data format
 
-### DBC format
+Over the next couple of pages we will be looking at the format of CAN data and how it can be represented in a more human readable format.
+
+## DBC Format
 
 Various ways to represent CAN frame structure, we are going to use DBC.
 
@@ -373,7 +382,7 @@ What this specifies is that accelerator pedal position will be transmitted as a 
 > In reality the frame ID is 581 but for the sake of simplicity for this task we are using classic CAN and so have to keep our frame IDs <256
 </details>
 
-### Encoding information
+## Encoding information
 
 An accelerator pedal pressed three quarters down would have a value of 0.75.
 
@@ -459,8 +468,10 @@ These roles will be referred to as Alice, Bob and Charlie.
 
   - They have gained access to the CAN bus and can send and receive messages.
 
+
 {{1}}
 > **Decide in your groups who will be Alice, Bob and Charlie.**
+
 
 <!--
 style="background-color: firebrick; color: white"
@@ -469,8 +480,6 @@ style="background-color: firebrick; color: white"
 >
 > Make sure to pay attention to the task numbers as some tasks will require you to you to do things at the same time as other group members.
 
-
-
 ```ascii
 
 💻👩   💻😈   💻👨
@@ -478,7 +487,7 @@ style="background-color: firebrick; color: white"
  *------*------*
 ```
 
-### Hardware setup
+## Hardware setup
 
 This is the setup we are trying to achieve. 
 
@@ -502,18 +511,36 @@ This is the setup we are trying to achieve.
              .-------------------. .-------------------.
 ```           
 
-Click on the connect button below, or on the other pages to connect to the CAN bus.
+
+
+
+{{2}}
+> **Click on the connect button below, or on the other pages to connect to the CAN bus.**
+>
+> - When pressed should get a pop-up list that allows you to select the appropriate device.
+>
+>   - Look for an option similar to "USB Serial Device (COMx)".
+> - Make sure that you are **Connected**<!-- style="color: green;" --> to the bus.
 
 @WebSerial.defaultManager
 
+{{3}}
+> **Go to the page that corresponds to your role.**
+>
+> - Alice 👩, Bob 👨 or Charlie 😈.
+> 
+>   - You can use the navigation bar on the left or the arrow buttons below.
 
-### 👩 Alice 
+
+
+
+
+
+## 👩 Alice 
 
 @WebSerial.defaultManager
 
-----------------------
-
-{{2-3}}
+{{4}}
 > **Use the controls below to simulate driving the vehicle.**
 >
 > - When you interact with the controls, the corresponding CAN frames will be sent to the CAN bus.
@@ -521,54 +548,85 @@ Click on the connect button below, or on the other pages to connect to the CAN b
 >   - These frames will be picked up by the other devices on the bus e.g. Bob.
 >   - These CAN frames are based on *real* frames. E.g. the accelerator pedal frame was taken from a 2010 Toyota Prius.
 >
-> <script input="submit" default="Hint">
+> <script input="submit" default="Press for hint">
 "Try using the indicators."
 </script>
 
+{{5}}
+> **Confirm with Bob 👨 that the instrument cluster is responding to your controls.**
+
+{{6}}
+> **Work with Charlie 😈 to identify the CAN frames that are being sent.**
+
 {{7}}
+> **Wait while Charlie 😈 sends some CAN frames to the bus.**
+
+{{8}}
 > **Check to see if you still have control of the vehicle.**
 >
-> <script input="submit" default="Hint">
+> <script input="submit" default="Press for hint">
 "Try using the accelerator."
 </script>
+
+{{9}}
+> **While Charlie 😈 sends some CAN frames to the bus.**
+>
+> - Try and control the vehicle.
+
+{{10}}
+> **Discuss with Bob 👨 and Charlie 😈 what is happening.**
+>
+> - What is the effect of the frames that Charlie 😈 is sending?
 
 @can.alice
 
 
 
-### 👨 Bob 
+## 👨 Bob 
 
 @WebSerial.defaultManager
 
-{{2}}
+{{5}}
 > **Check that the IC is responding correctly to the CAN frames that Alice is sending.** 
 >
-> <script input="submit" default="Hint">
+> <script input="submit" default="Press for hint">
 "Check the indicators."
 </script>
 
-{{5}}
-> **Check that the IC is responding to the frames that Charlie is sending.**
+{{6}}
+> **Work with Charlie 😈 to identify the CAN frames that are being sent.**
+
+{{7}}
+> **Wait while Charlie 😈 sends some CAN frames to the bus.**
+
+{{8}}
+> **Check that the IC is responding to the frames that Charlie 😈 is sending.**
 >
-> <script input="submit" default="Hint">
+> <script input="submit" default="Press for hint">
 "Are both indicators on?"
 </script>
 
-{{7}}
-> **Check to see if Alice still has control of the vehicle.**
+{{9}}
+> **While Charlie 😈 sends some CAN frames to the bus.**
+>
+> - Check to see if Alice 👩 still has control of the vehicle.
+
+{{10}}
+> **Discuss with Alice 👩 and Charlie 😈 what is happening.**
+>
+> - What is the effect of the frames that Charlie 😈 is sending?
 
 @Dashboard.display
 
 
-
-### 😈 Charlie 
+## 😈 Charlie 
 
 Charlie's role has two parts:
 
 1. Interception.
 2. Retransmission.
 
-#### Interception
+### Interception
 
 @WebSerial.defaultManager
 
@@ -582,14 +640,14 @@ This is the first step in a man-in-the-middle attack.
 For a CAN bus this is passive action and does not need to be literally in the middle.
 As long as Charlie is on the same CAN bus, they can see all the messages being sent.
 
-{{3}}
-> **Try and identify the CAN frames that correspond to the actions that Alice is taking.**
+{{5}}
+> **Try and identify the CAN frames that correspond to the actions that Alice 👩 is taking.**
 >
 > - Importantly, we don't need to decode or understand the CAN data, just identify which frames correspond to which actions.
 >
 >   - You may want to make notes.
 >
-> <script input="submit" default="Hint">
+> <script input="submit" default="Press for hint">
 "E.g. Every time the indicators are used, a frame with ID 203 is intercepted."
 </script>
 
@@ -597,20 +655,18 @@ As long as Charlie is on the same CAN bus, they can see all the messages being s
 
 
 
-#### Retransmission
+### Retransmission
 
 @WebSerial.defaultManager
 
-----------------------
-
 Using the form below, Charlie can transmit arbitrary CAN frames to the CAN bus.
 
-{{4}}
+{{7}}
 > **Send a CAN frame**
 >
 > - Use the information from one of the frames that you intercepted previously.
 >
-> <script input="submit" default="Hint">
+> <script input="submit" default="Press for hint">
 document.getElementById("can_frame_id").value = 203;
 document.getElementById("can_frame_data").value = "0x2000000000000000";
 document.getElementById("can_frame_duration").value = 1;
@@ -619,15 +675,18 @@ document.getElementById("can_frame_hz").value = 1;
 "Send a frame to turn both indicators on."
 </script>
 
-{{5}}
-> **Check that the IC is responding to your retransmitted CAN frames.**
+{{8}}
+> **Check with Bob 👨 that the IC is responding to your retransmitted CAN frames.**
 >
 > - Sending a single frame could have a noticeable effect on the vehicle.
 >
 >   - E.g. unlocking doors, turning on lights, etc.
 > - More subtle attacks could be to send a frame that causes the dashboard to display incorrect information.
+> <script input="submit" default="Press for hint">
+"Both indicators should have turned on."
+</script>
 
-{{6}}
+{{9}}
 > **Send multiple frames**
 >
 > - Use the form below to send multiple frames.
@@ -635,7 +694,7 @@ document.getElementById("can_frame_hz").value = 1;
 >   - Adjust the Duration and Rate values to control how many frames are sent and how quickly.
 > - By "flooding" the CAN bus with frames we can overwhelm or drown out legitimate frames.
 > 
-> <script input="submit" default="Hint">
+> <script input="submit" default="Press for hint">
 document.getElementById("can_frame_id").value = 81;
 document.getElementById("can_frame_data").value = "0x0000C80000000000";
 document.getElementById("can_frame_duration").value = 30;
@@ -644,14 +703,16 @@ document.getElementById("can_frame_hz").value = 100;
 "Flooding the bus with frames saying the accelerator is fully pressed."
 </script>
 
-{{7}}
-> **Check to see if Alice still has control of the vehicle.**
+{{10}}
+> **Discuss with Alice 👩 and Bob 👨 what is happening.**
+>
+> - What is the effect of the frames that you are sending?
 
 @can.retransmit
 
 
 
-# Conclusion
+# Summary
 
 In this activity you have seen how a malicious attacker can intercept and retransmit CAN frames.
 
@@ -671,32 +732,43 @@ Other network technologies such as Ethernet have improved security due to a comb
 
 - But come at both a complexity and financial cost.
 
-1. **Message Authentication Codes (MACs)**:
-  - Use cryptographic techniques to ensure the authenticity of messages.
-  - Helps in verifying that the message has not been altered.
+--------------------------
 
-2. **Encryption**:
-  - Encrypt CAN messages to prevent unauthorized access and tampering.
-  - Ensure that only authorized nodes can decrypt and understand the messages.
+1. **Message Authentication Codes (MACs)**
 
-3. **Rolling Codes**:
-  - Use rolling codes for critical commands to prevent replay attacks.
-  - Each command is valid only once, making it difficult for attackers to reuse captured messages.
+    - Use cryptographic techniques to ensure the authenticity of messages.
+    - Helps in verifying that the message has not been altered.
 
-4. **Intrusion Detection Systems (IDS)**:
-  - Implement IDS to monitor CAN traffic for anomalies.
-  - Detect and alert on suspicious activities or patterns that indicate an attack.
+2. **Encryption**
 
-5. **Segmentation**:
-  - Segment the CAN network into smaller, isolated sections.
-  - Limit the impact of a compromised node by containing the attack within a segment.
+    - Encrypt CAN messages to prevent unauthorized access and tampering.
+    - Ensure that only authorized nodes can decrypt and understand the messages.
 
-6. **Rate Limiting**:
-  - Implement rate limiting to control the frequency of messages sent on the CAN bus.
-  - Prevent attackers from flooding the network with malicious messages.
+3. **Rolling Codes**
 
-7. **Message Filtering**:
-  - Use message filters to allow only legitimate messages to be processed.
-  - Discard any messages that do not match predefined criteria.
+    - Use rolling codes for critical commands to prevent replay attacks.
+    - Each command is valid only once, making it difficult for attackers to reuse captured messages.
+
+4. **Intrusion Detection Systems (IDS)**
+
+    - Implement IDS to monitor CAN traffic for anomalies.
+    - Detect and alert on suspicious activities or patterns that indicate an attack.
+
+5. **Segmentation**
+
+    - Segment the CAN network into smaller, isolated sections.
+    - Limit the impact of a compromised node by containing the attack within a segment.
+
+6. **Rate Limiting**
+
+    - Implement rate limiting to control the frequency of messages sent on the CAN bus.
+    - Prevent attackers from flooding the network with malicious messages.
+
+7. **Message Filtering**
+
+    - Use message filters to allow only legitimate messages to be processed.
+    - Discard any messages that do not match predefined criteria.
+
+-----------------------
 
 By implementing these methods, the security of CAN networks can be significantly enhanced, reducing the risk of attacks and ensuring the integrity and reliability of the communication system.
