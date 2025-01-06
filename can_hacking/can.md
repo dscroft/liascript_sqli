@@ -5,11 +5,11 @@ version:  0.1.0
 language: en
 narrator: US English Male
 
+classroom: false
 icon: https://dscroft.github.io/liascript_materials/assets/logo.svg
 
 import: macros_webserial.md
 import: macros_dashboard.md
-link:  ../assets/styles.css
 
 @onload
 async function waitForConnection() {
@@ -175,7 +175,7 @@ waitForConnection();
 
 <!-- data-type='none'
      data-sortable='false' -->
-| Off | Low | High |
+| Off | Dipped | Full beam |
 | :-: | :-: | :-: |
 | <input type="radio" name="headlights" value="off"> | <input type="radio" name="headlights" value="low"> | <input type="radio" name="headlights" value="high"> |
 
@@ -338,6 +338,16 @@ This activity works best in groups of 3, ideally every member will have their ow
 
 In the event that there are insufficient participants or computers then groups of 2 or 4 will also work, individuals on their own will struggle.
 
+------------------------------
+
+You can navigate through the activity using:
+
+- The arrow buttons at the bottom of the page.
+- The arrow keys on your keyboard.
+- The navigation bar on the left.
+
+-----------------------------
+
 <!--
 style="background-color: firebrick; color: white"
 -->
@@ -454,7 +464,7 @@ These roles will be referred to as Alice, Bob and Charlie.
 
 - Alice 👩 will be playing the part of the driver.
 
-  - In this scenario it is a drive by wire vehicle, so the accelerator pedal is not physically linked to anything.
+  - In this scenario it is a drive by wire vehicle, so the accelerator pedal is not mechanically linked to anything.
   - Pressing the pedal causes a signal to be sent to the engine control unit (ECU) to perform the appropriate action. 
 - Bob 👨 will be playing the part of the vehicle.
 
