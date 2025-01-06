@@ -76,6 +76,31 @@ attribute: [jQuery](https://jquery.com/)
     alasql("INSERT INTO vehicles VALUES ('19UUA8F55CA001234', 'Acura', 'TL', 2012, 'UJ98 XCN', 'Black');");
     alasql("INSERT INTO vehicles VALUES ('JTHBK1EG3C2098765', 'Lexus', 'ES 350', 2012, 'DM56 KOP', 'Silver');");
     console.log("Table vehicles created");
+
+    console.log("Building owners table");
+    alasql("DROP TABLE IF EXISTS owners;");
+    alasql("CREATE TABLE owners (userid number, vin text);");
+    alasql("INSERT INTO owners VALUES ('1', '3GCPCSE05BG193249');");
+    alasql("INSERT INTO owners VALUES ('2', '1HGCM82633A123456');");
+    alasql("INSERT INTO owners VALUES ('3', '4T1BE32K44U876543');");
+    alasql("INSERT INTO owners VALUES ('4', '2C3KA43R88H125478');");
+    alasql("INSERT INTO owners VALUES ('4', '1FTFW1ET0EKE39357');");
+    alasql("INSERT INTO owners VALUES ('4', '5UXWX9C5XH0D12345');");
+    alasql("INSERT INTO owners VALUES ('7', '3FA6P0HR1GR187654');");
+    alasql("INSERT INTO owners VALUES ('8', '5YJ3E1EA7KF314159');");
+    alasql("INSERT INTO owners VALUES ('9', '1G1BE5SM2G7101234');");
+    alasql("INSERT INTO owners VALUES ('10', 'WAUFFAFL7CN111111');");
+    alasql("INSERT INTO owners VALUES ('11', '2HGFB2F50FH123789');");
+    alasql("INSERT INTO owners VALUES ('12', 'JHMGE8H39CS004321');");
+    alasql("INSERT INTO owners VALUES ('13', '1FTEX1EP3FKD56789');");
+    alasql("INSERT INTO owners VALUES ('14', 'WBA3A5C55FF123456');");
+    alasql("INSERT INTO owners VALUES ('15', 'JN1CV6EK9EM123456');");
+    alasql("INSERT INTO owners VALUES ('15', '3N1AB7AP4HY123789');");
+    alasql("INSERT INTO owners VALUES ('17', '1FAFP40454F123456');");
+    alasql("INSERT INTO owners VALUES ('18', '1G11C5SA2EF204321');");
+    alasql("INSERT INTO owners VALUES ('19', '19UUA8F55CA001234');");
+    alasql("INSERT INTO owners VALUES ('19', 'JTHBK1EG3C2098765');");
+    console.log("Table owners created");
 @end
 
 @AlaSQL.eval

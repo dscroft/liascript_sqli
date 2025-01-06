@@ -186,6 +186,27 @@ SQL query being run:
 </script>
 
 @end
+
+@DatabaseDiagram
+<!-- class="notranslate" translate="no" style="max-width: 600px"-->
+```ascii
++-----------+       +----------+        
+| users     |       | owners   |        +----------+       
++-----------+       +----------+        | vehicles |       
+| id        +------>| userid   |        +----------+       
+| username  |       | vin      +------->| vin      |       
+| password  |       +----------+        | make     | 
+| firstname |                           | model    |
+| lastname  |                           | year     |
+| address   |                           | reg      |
+| city      |                           | color    |
+| county    |                           +----------+
+| postal    |     
+| phone     |     
+| email     |     
++-----------+
+```
+@end
 -->
 
 # SQL Injection
@@ -216,7 +237,7 @@ Experience working with rectangular data (data in rows and columns) is required.
 
 - I.e. Excel. 
 
-No experience writing SQL code is expected or required for this module. 
+No experience writing SQL code is expected or required for this activity. 
 
 
 ## Relational databases
@@ -245,24 +266,7 @@ For example, the vehicles table:
 
 Tables can then be linked together according to their attributes (columns) to describe relationships between records (rows) in different tables.
 
-<!-- class="notranslate" translate="no" -->
-```ascii
-+-----------+       +----------+        
-| users     |       | owners   |        +---------+       
-+-----------+       +----------+        | vehicle |       
-| id        +------>| userid   |        +---------+       
-| username  |       | vin      +------->| vin     |       
-| password  |       +----------+        | make    | 
-| firstname |                           | model   |
-| lastname  |                           | year    |
-| address   |                           | reg     |
-| city      |                           | color   |
-| county    |                           +---------+
-| postal    |     
-| phone     |     
-| email     |     
-+-----------+
-```
+@DatabaseDiagram
 
 
 
@@ -298,27 +302,15 @@ LIMIT 5;
 <table id="vehicleTableExample" border="1"></table><br>
 
 
-### Task
+### Task 1
 
 {{1}}
 >  **Try editing the SQL query to see the effect that it has on the information returned.**
 >
 > - Try changing the limit to see the effect it has on the number of rows returned. 
 >
-> <script input="submit" default="Hint">
+> <script input="submit" default="Press for Hint">
 "Try changing 'LIMIT 5' to 'LIMIT 10'."
-</script>
-
-> - Try changing the table name.
->
-> <script input="submit" default="Hint">
-"Try changing 'vehicles' to 'users'."
-</script>
-
-> - Try changing the columns returned.
->
-> <script input="submit" default="Hint">
-"Try changing 'SELECT *' to 'SELECT username, password', assuming you are using the users table."
 </script>
 
 <!-- id="queryText" -->
@@ -330,6 +322,28 @@ LIMIT 5;
 @AlaSQL.eval("#vehicleTableTask")
 
 <table id="vehicleTableTask" border="1"></table><br>
+
+{{2}}
+> **Try changing the table name.**
+>
+> <script input="submit" default="Press for Hint">
+"Try changing 'vehicles' to 'users'."
+</script>
+
+{{3}}
+> **Try changing the columns returned.**
+>
+> <script input="submit" default="Press for Hint">
+"Try changing 'SELECT *' to 'SELECT username, password', assuming you are using the users table."
+</script>
+
+As a reminder, here is the database structure that we are working with:
+
+@DatabaseDiagram
+
+
+
+
 
 
 
@@ -365,7 +379,7 @@ For example, if our username is "Moose147" and our password is "hunter2" then th
 
 ------------------------------------------------------------
 
-If the username and password match then the count will be 1.
+If the username and password match then the count will be 1, which indicates that this account does exist and they can proceed.
 
 ```sql
 SELECT COUNT(*)
@@ -379,7 +393,7 @@ WHERE username = 'Moose147'
 
 ------------------------------------------------------------
 
-If they do not match then the count will be 0.
+If they do not match then the count will be 0, which indicates that this account does not exist, or the password is wrong and they cannot proceed.
 
 ```sql
 SELECT COUNT(*)
@@ -396,7 +410,7 @@ WHERE username = 'Moose147'
 
 
 
-### Task 1
+### Task 2
 
 The issue comes in how the (some) programmers creates the SQL query that is being run.
 
@@ -404,7 +418,7 @@ The simplest and most obvious way is to use string concatenation.
 
 - I.e. we simply stick whatever the user enters on the website onto the query.
 
-```python -Example in python
+```python -Example in python (click to open)
 username = get_username()
 password = get_password()
 
@@ -412,7 +426,7 @@ query = "SELECT COUNT(*) FROM users WHERE username = '" +
         username + "' AND password = '" + password + "';"
 ```
 
-```cpp -Example in C++
+```cpp -Example in C++ (click to open)
 string username = get_username();
 string password = get_password();
 
@@ -430,18 +444,18 @@ string query = "SELECT COUNT(*) FROM users WHERE username = '" +
 >
 > Press the login button.
 >
-> <script input="submit" default="Hint">
+> <script input="submit" default="Press for Hint">
 document.getElementById("username").value = "Moose147";
 document.getElementById("password").value = "hunter2";
 document.getElementById("username").dispatchEvent(new Event('input'));
-"Hint";
+"Solution filled in.";
 </script>
 
 @LoginExample
 
 
 
-### Task 2
+### Task 3
 
 The problem with string concatenation is that it does not take into account all the possibilities for what the user might enter.
 
@@ -459,10 +473,10 @@ The problem with string concatenation is that it does not take into account all 
 >
 > Press the login button.
 >
-> <script input="submit" default="Hint">
+> <script input="submit" default="Press for Hint">
 document.getElementById("username").value = "Moose147'; --";
 document.getElementById("username").dispatchEvent(new Event('input'));
-"Hint";
+"Solution filled in.";
 </script>
 
 @LoginExample
@@ -489,11 +503,17 @@ document.getElementById("username").dispatchEvent(new Event('input'));
 > Instead of a query that checks the username and password, we have a query that just checks the username and then logs in regardless of the password that was entered.
 
 
+
 ### Comic
 
 ![Her daughter is named Help I'm trapped in a driver's license factory.](https://imgs.xkcd.com/comics/exploits_of_a_mom.png "XKCD: \"EXPLOITS OF A MOM\"")
 
+The famous XKCD Bobby Tables comic.
 
+`DROP TABLE` is an SQL command that deletes and entire table, in this case the students table.
+This activity will let you drop tables in the database if you send the command, but it will also restore the database every time your go to a new page so that you can keep doing the tasks.
+
+For more information see [explainxkcd.com](https://www.explainxkcd.com/wiki/index.php/327:_Exploits_of_a_Mom).
 
 
 
@@ -521,33 +541,33 @@ WHERE reg = 'HW21 FKL';
 <table id="searchResults" border="1"></table><br>
 
 
-### Task 1
+### Task 4
 
 @SearchExample
 
 {{1}}
 > **Search for the vehicle with the registration HW21 FKL.**
 >
-> <script input="submit" default="Hint">
+> <script input="submit" default="Press for Hint">
 document.getElementById("registration").value = "HW21 FKL";
 document.getElementById("registration").dispatchEvent(new Event('input'));
-"Hint";
+"Solution filled in.";
 </script>
 
-### Task 2
+### Task 5
 
 @SearchExample
 
 {{1}}
 > **Using what we have learned so far, can you extract information on all the vehicles?**
 > 
-> <script input="submit" default="Hint">
+> <script input="submit" default="Press for Hint">
 document.getElementById("registration").value = "HW21 FKL' or 1=1; --";
 document.getElementById("registration").dispatchEvent(new Event('input'));
-"Hint"
+"Solution filled in.";
 </script>
 
-### Task 3
+### Task 6
 
 This is all well and good but we can do more than just extract information from the vehicles table.
 
@@ -603,14 +623,21 @@ For example login pages do not reveal the actual results of the query to the use
 
 However, if the query is vulnerable to SQL injection then an attacker can use the time that it for that success or failure message to appear to determine the contents of the database.
 
-For example, SQL queries that will wait 1 second if the first letter of the password on the first row is between A and M. By timing the response from the server the attacker can determine if the passwords starts A-M or N-Z. 
-Repeat with A-F and so on until the first letter is revealed.
-Repeat for second letter until whole password is revealed.
-Repeat for every row for every password.
-Repeat for every column for complete table.
-Repeat for every table for complete database.
+- E.g. SQL queries that will wait 1 second depending on the result.
 
-This would obviously be a slow process but it is very possible and more importantly is achievable with cybersecurity/hacking tools that can automatically identify explore the vulnerable query and automatically perform this data exflitration.
+  - If the first letter of the password on the first row is between A and M. 
+- By timing the response from the server the attacker can determine if the passwords starts A-M or N-Z. 
+  
+  - Repeat with A-F and so on until the first letter is revealed.
+  - Repeat for second letter until whole password is revealed.
+  - Repeat for every row for every password.
+  - Repeat for every column for complete table.
+  - Repeat for every table for complete database.
+
+This would obviously be a slow process but it is very possible.
+More importantly it is achievable with cybersecurity/hacking tools that can automatically identify explore the vulnerability and perform this data exflitration.
+
+- So any SQLi vulnerability anywhere in your system is potentially a complete compromise of your database.
 
 
 ## Solutions
