@@ -8,6 +8,8 @@ narrator: US English Male
 classroom: false
 icon: https://dscroft.github.io/liascript_materials/assets/logo.svg
 
+import: https://dscroft.github.io/liascript_materials/assets/utils.md
+
 @style
 .flex-container {
     display: flex;
@@ -21,6 +23,52 @@ icon: https://dscroft.github.io/liascript_materials/assets/logo.svg
     margin-right: 20px; /* Adds space between the columns */
 }
 
+.ev3display {
+  color: white; 
+  font-weight: bold;
+  padding-left: 5px;
+  padding-right: 5px;
+  background-color: #935df5;
+}
+
+.ev3event {
+  color: white; 
+  font-weight: bold;
+  padding-left: 5px;
+  padding-right: 5px;
+  background-color: #f5c400;
+}
+
+.ev3motor {
+  color: white; 
+  font-weight: bold;
+  padding-left: 5px;
+  padding-right: 5px;
+  background-color: #0090f5;
+}
+
+.ev3my {
+  color: white; 
+  font-weight: bold;
+  padding-left: 5px;
+  padding-right: 5px;
+  background-color: #ff6680;
+}
+
+.ev3mysection { 
+  font-weight: bold;
+  color: #ff6680
+}
+
+.ev3sensor {
+  color: white; 
+  font-weight: bold;
+  padding-left: 5px;
+  padding-right: 5px;
+  background-color: #1dccf0;
+}
+
+
 @media (max-width: 600px) {
     .flex-child {
         flex: 100%; /* Makes the child divs take up the full width on slim devices */
@@ -28,18 +76,15 @@ icon: https://dscroft.github.io/liascript_materials/assets/logo.svg
     }
 }
 @end
-
 -->
 
 # Sensor Metrics and Characterisation
 
 ![](assets/image3.png)
 
-
-
 ## Robot fight?
 
-!?[Robot fight?](https://youtu.be/KwDUMVrHdZg?t=203)
+!?[Robot fight?](https://youtu.be/KwDUMVrHdZg?start=203)
 
 
 
@@ -66,24 +111,10 @@ style="background-color: firebrick; color: white"
 
 ## Outline
 
-- Learn LEGO EV3 vehicles hardware
-- Learn LEGO LEGO EV3 software as well as some basic block programming steps
-- Learn LEGO EV3 sensor data logging
-- Activities
+@TableOfContents(1)
 
 
 # LEGO EV3 vehicles hardware
-
-LAB 01 Sensor
-Characterisation
-LEGO Town
-
-LEGO EV3 vehicles
-hardware
-
-
-
-## Sensors
 
 ![](assets/image6.png)
 
@@ -179,8 +210,9 @@ A simple on/off button. Can be used to allow human interference in running of th
 
 ![](assets/image18.png "EV3 Brick")
 
+# LEGO EV3 software
 
-## Possible Languages
+The EV3 can support and can interact with a wide range of possible languages.
 
 - EV3 - default block programming suite (later in the slides)
 - C Language/ROBOT C
@@ -189,99 +221,18 @@ A simple on/off button. Can be used to allow human interference in running of th
 - Scratch
 - MATLAB & Simulink
 
+For this lab will be using MATLAB and/or the official EV3 software.
 
-
-## LEGO EV3 software
-
-## Introduction to EV3
-
-- Launch LEGO
-MINDSTORMS
-Education EV3
-
-17
-
-## Introduction to EV3
-
-- Click on 'File'.>'New
-Project'.>'Program.'.
-. 18. ..
-## Action Blocks (Green).
-
-- These bricks allow you to execute various actions
-through code. With these blocks, you can control
-motor rotations (of both the medium and the
-large servo motors) as well as image, sound and
-light on the EV3 Brick.
-
-19
-
-## Flow Blocks (Orange)
-
-- These blocks control the flow of your program.
-- All programs will begin with the Start Block.
-- You can also use these blocks to create different
-types of loops with conditions set by sensor data.
-
-20
-
-## Sensor Blocks (Yellow)
-
-- These are the blocks you need to use to read
-
-data from the various sensors available to you.
-- Once you lay down the block, you can alter the
-
-settings of the block
-- for example, you can set the Ultrasonic Sensor to
-detect objects, or to measure the actual distance
-from the sensor to an object.
-
-21
-
-## Data Operation Blocks (Red)
-
-- The data operation blocks will allow you to read,
-write and compare variables and constants. You
-can use these blocks to carry out simple
-arithmetic operations and Boolean operations
-amongst several others.
-
-22
-
-## Advanced Blocks (Dark Blue)
-
-- These allow manage different files, establish
-connections via Bluetooth, log data, leave
-comments, and more.
-
-23
-
-# Data logging
+Data logging
+============
 
 Data logging can be crucial in order to understand why and how a particular autonomous vehicle behaves the way it does
 It helps to verify whether the software and hardware are behaving in the intended manner
 
-- There are 4 main ways of data logging using the EV3 MINDSTORMS:
+We will be recommending two methods of data logging.
 
-1. Live Data Logging
-2. Live Data Reading
-3. Remote Data Logging
-4. Brick Data Logging
-5. Autonomous Data Logging
-
-The original official EV3 software is no longer supported due to the Microsoft Silverlight plug-in being discontinued.
-The new official EV3 software does not contain equivalent data logging capabilities.
-
-Instead we will be using Matlab to log, plot and analyse data captured from the sensors.
-
-This form of data logging takes place when you add a data logging functionality in your code
-itself using the Data Logging block
-
-- For this form of logging, you only need to create a
-new project, you do not need to open a 'New
-Experiment'.
-
+- Matlab data logging.
+- Brick data logging.
 
 
 ## Brick Data Logging
@@ -332,14 +283,34 @@ external software.
 
 
 
-## Remote Data Logging
+## Matlab Data Logging
 
-Remote Data Logging involves the establishment of a connection between the EV3 brick and external software using either Bluetooth, WIFI, or a USB;
-in order to attain real-time data from the sensors
+Matlab Data Logging involves the establishment of a connection between the EV3 brick and external Matlab software using either Bluetooth, WIFI, or a USB; in order to attain real-time data from the sensors
 
+Make sure that:
+
+- You have a copy of MATLAB open.
+
+- The LEGO EV3 support package is installed.
+  
+  - If not, see [here](https://uk.mathworks.com/help/matlab/supportpkg/install-support-for-lego-mindstorms-ev3-hardware.html). 
+
+- The EV3 is connected to the computer via USB.
+- The EV3 is turned on.
+
+These instructions were confirmed for Matlab 2022b and 2024a.
+They should work in other versions but were not tested.
+
+For further documentation see [here](https://uk.mathworks.com/help/matlab/legomindstormsev3io.html).
 
 
 ### Example 1 - Test sensors
+
+Create a new script and copy the following code.
+
+When ready, run the script.
+
+- A single reading from each sensor will be taken and output.
 
 ``` matlab
 % test if ev variable already exists, if not, create it
@@ -370,6 +341,8 @@ fprintf( "Sonar: %f\n", readDistance( sonar ) );
 
 
 ### Example 2 - Move motors
+
+When run this script moves the robot, forward, turns, then stops.
 
 ``` matlab
 % config
@@ -405,6 +378,11 @@ right.Speed = 0;
 
 
 ### Example 3 - Log data
+
+When run this script logs proximity data from the IR sensor over time and plots it.
+
+- Try adjusting the update rate and collection period.
+- Try changing the sensor that is being read.
 
 ``` matlab
 function historicValues = mainloop( ev, updateRate, runFor )
@@ -447,7 +425,6 @@ end
 % test if ev variable already exists, if not, create it
 if ~exist('ev', 'var')
     ev = legoev3('USB');
-    %ev = legoev3('bt', '001653514A3D');
 end
 
 values = mainloop( ev );
@@ -455,7 +432,9 @@ values = mainloop( ev );
 
 
 
-### Example 4
+### Example 4 - Multiple plots
+
+An example of logging and plotting multiple sensors at the same time.
 
 ``` matlab
 function historicValues = mainloop( ev, updateRate, runFor )
@@ -512,6 +491,153 @@ values = mainloop( ev );
 ```
 
 
+### Example 5 - Sense/Act
+
+An example of the bot responding to input. In this case the bot will move forward until an obstacle is detected.
+
+``` matlab
+function historicValues = mainloop( ev, updateRate )
+    % config
+    if nargin < 2
+        updateRate = 10; % Hz
+    end
+
+    % connect to sensors
+    sonar = sonicSensor( ev, 4 );
+
+    % initalise and start motors
+    left = motor( ev, 'A' );
+    right = motor( ev, 'D' );
+    start(left);
+    start(right);
+
+    while true
+        dist = readDistance( sonar );
+
+        % convert sonar to cm
+        dist = dist * 100;
+
+        if dist > 10
+            fprintf( 'Moving forward\n' );
+            % move forward
+            left.Speed = 20;
+            right.Speed = 20;
+        else
+            fprintf( 'Stopping\n' );
+            % stop
+            left.Speed = 0;
+            right.Speed = 0;
+        end
+
+        pause( 1.0 / updateRate );
+    end
+end
+
+% test if ev variable already exists, if not, create it
+if ~exist('ev', 'var')
+    ev = legoev3('USB');
+end
+
+values = mainloop( ev );
+```
+
+
+## Block software
+
+The EV3 can be programmed using the default block programming suite, available [here](https://education.lego.com/en-gb/downloads/mindstorms-ev3/software/).
+
+But this is extremely limited in terms of data logging functionality.
+It may be useful for used to complete the activities but we would recommend that Matlab is used for the initial data logging.
+
+![](assets/ev3_screenshots/blank_interface.png)
+
+### Connecting ev3
+
+![](assets/ev3_screenshots/usb_connect.png)
+
+
+### Motor control
+
+Motors can be controlled in various ways using the motor <!--class="ev3motor"--> blocks.
+
+Either rotated specific amounts or set to specific speeds and infinite rotation.
+
+![](assets/ev3_screenshots/simple_control.png)
+
+<!-- style="display:none" -->
+```bash
+for img in *.png; do
+  convert "$img" -gravity north -chop x24 -gravity south -chop x40 "$img"
+done
+```
+
+### Sensor data
+
+Sensor data can be read and basic comparisons done using the sensor<!--class="ev3sensor"--> blocks.
+
+![](assets/ev3_screenshots/main_loop.png)
+
+<!-- style="display:none" -->
+```bash
+for img in *.png; do
+  convert "$img" -gravity north -chop x24 -gravity south -chop x40 "$img"
+done
+```
+
+
+
+
+
+
+### Display data
+
+Limited sensor information can be displayed on the EV3 screen using the display<!--class="ev3display"--> block.
+
+Select the relevant sensor from the drop-down menu in the block.
+
+
+Custom displays can be created using the write<!--class="ev3display"--> blocks.
+
+
+![](assets/ev3_screenshots/display.png)
+
+
+### Control architecture
+
+There are two main approaches to control architecture:
+
+1. Single main loop that repeatedly polls the sensors and updates the actuators.
+
+  - Using a single event<!--class="ev3event"--> block.
+
+
+![](assets/ev3_screenshots/main_loop.png "Single main loop")
+
+
+-----------------
+
+2. Callback architecture where sensor value changes trigger behaviors.
+
+  - Using one event<!--class="ev3event"--> block per trigger.
+
+![](assets/ev3_screenshots/callbacks.png "Callbacks")
+
+
+
+### Functions
+
+Functional programming can be achieved by creating custom blocks in the 
+<span class="ev3mysection">MY BLOCKS</span> section.
+
+Use a define<!--class="ev3my"--> block to specify your function.
+Then place your custom block to call the function.
+
+![](assets/ev3_screenshots/function_definition.png "Defining a custom block")
+
+![](assets/ev3_screenshots/function_call.png "Calling custom block")
+
+
+
 # Activities
 
 We are building the sensor suite for our Level 4 LEGO vehicle.
@@ -519,15 +645,19 @@ We are building the sensor suite for our Level 4 LEGO vehicle.
 - You will use the info collected today for your IMA.
 - To achieve that we are going to decompose our function.
 
+------------------
+
 1. Navigation following a pre-defined path (30 min)
 2. Look at the sensor data and refine your function (30 min)
 3. Sensor characterization & obstacle detection (90 min)
-  - NOTE: measurements of the above activity are very important for your PMA.
+
+    - NOTE: measurements of the above activity are very important for your PMA.
 4. Navigation with pre-defined path and obstacles (remaining time - if any).
 
 
 
-## Equipment available
+Equipment available
+===============
 
 - 1 or 2 robots per group.
 - Laptops with TODO installed (do not use home edition!).
@@ -553,7 +683,9 @@ We are building the sensor suite for our Level 4 LEGO vehicle.
   - Your vehicle must be able to detect the black path using the Colour Sensor.
   - Your vehicle must follow this path (being driven by the motors).
 
-TODO path 
+<!-- style="max-width: 400px" -->
+![Path](assets/path.png "Path to follow")
+
 
 Some considerations
 ===================
@@ -581,7 +713,7 @@ Understanding data readings is fundamental for autonomous vehicles.
   - *Optional - plot them.*
 - Can you use the data to improve your control?
 
-[ ![](assets/image50.jpeg) ] ![](assets/image55.png)
+![](assets/image50.jpeg) ![](assets/image55.png)
 
 <!-- style="display:none" -->
 https://goo.gl/images/mRQUWU https://goo.gl/images/L9msRF
@@ -596,7 +728,7 @@ the vehicle needs to be able to detect obstacles.
 - We would like it to avoid pedestrians, other vehicles, orange cones, etc.
 - To carry out this task you need to characterise your available sensors
 
-![](assets/image58.jpeg)
+![](assets/image58.png)
 
 Obstacle detection
 ==================
@@ -618,6 +750,7 @@ Understand sensor performance:
 - Functional or non-functional testing?
 
 - *HINT: For this activity, you may need to use sensor data logging.*
+
   - Record as much of your data because you are going to need them in your assignment.
 
 
@@ -631,26 +764,19 @@ You now have to combine what you have learned from the previous activities.
 
 ![](assets/image60.png)
 
-<!-- display:none -->
+<!-- style="display:none" -->
 https://goo.gl/images/F7iR1z
 
 
-
-## URBAN L4 Activity 4 -
-Navigation and obstacle detection
-
-- Optimise your use of sensors and their combination
+Optimise your use of sensors and their combination
 to get through the path as fast as possible without
 bumping the obstacles
 
-- The implemented algorithm is a very basic way of
-
-implementing high level sensor fusion
-- Do sensors have priority?
-- Are their read at the same time?
-- How fast they are?
-- How promptly do you need to counter act?
-
+- Is it work implementing some high level sensor fusion?
+  
+  - Do certain sensors have priority?
+  - Are they read at the same time?
+  - How fast they are?
 
 
 # Conclusion
